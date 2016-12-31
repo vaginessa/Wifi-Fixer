@@ -33,9 +33,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import org.wahtod.wififixer.R;
 import org.wahtod.wififixer.WFMonitor;
-import org.wahtod.wififixer.utility.*;
+import org.wahtod.wififixer.utility.AsyncWifiManager;
+import org.wahtod.wififixer.utility.BroadcastHelper;
+import org.wahtod.wififixer.utility.NotifUtil;
+import org.wahtod.wififixer.utility.StringUtil;
+import org.wahtod.wififixer.utility.WFScanResult;
 
 import java.lang.reflect.Field;
 
@@ -85,7 +90,6 @@ public class ConnectFragment extends Fragment implements OnClickListener {
         return f;
     }
 
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.connect_fragment, null);
@@ -141,7 +145,7 @@ public class ConnectFragment extends Fragment implements OnClickListener {
 
     @Override
     public void onDestroyView() {
-        View e = ((View) getView().findViewById(R.id.password));
+        View e = getView().findViewById(R.id.password);
         closeInputMethod(e);
         super.onDestroyView();
     }
