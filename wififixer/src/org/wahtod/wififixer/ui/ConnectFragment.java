@@ -92,8 +92,7 @@ public class ConnectFragment extends Fragment implements OnClickListener {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.connect_fragment, null);
-        return v;
+        return inflater.inflate(R.layout.connect_fragment, null);
     }
 
     private int addNetwork(String password) {
