@@ -118,7 +118,7 @@ public abstract class TutorialFragmentActivity extends AppFragmentActivity {
         }
     }
 
-    @Override
+
     protected void onPause() {
         removeAllMessages();
         super.onPause();
