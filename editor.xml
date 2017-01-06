@@ -1,4 +1,7 @@
 <application>
+  <component name="EditorSettings">
+    <option name="USE_SOFT_WRAPS" value="" />
+  </component>
   <component name="TodoConfiguration">
     <pattern icon="default" useCustomColors="false" case-sensitive="true" pattern="\btodo\b.*">
       <option name="FOREGROUND" value="73bf" />
