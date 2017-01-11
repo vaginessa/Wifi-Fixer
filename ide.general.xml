@@ -3,5 +3,6 @@
     <entry key="analyze.exceptions.on.the.fly" value="true" />
     <entry key="debugger.mayBringFrameToFrontOnBreakpoint" value="false" />
     <entry key="vcs.annotations.preload" value="true" />
+    <entry key="ide.windowSystem.autoShowProcessPopup" value="true" />
   </component>
 </application>
