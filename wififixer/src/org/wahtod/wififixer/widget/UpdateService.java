@@ -25,6 +25,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
+
 import org.wahtod.wififixer.R;
 
 public class UpdateService extends IntentService {
@@ -32,22 +33,6 @@ public class UpdateService extends IntentService {
 
     public UpdateService() {
         super("UpdateService");
-    }
-
-    @Override
-    protected void onHandleIntent(Intent intent) {
-        // Build the widget update for today
-        RemoteViews updateViews = doUpdate(this, intent);
-
-        // Push update for this widget to the home screen
-        ComponentName thisWidget;
-        if (intent.getStringExtra(WIDGET_PROVIDER_NAME).equals(
-                FixerWidget.class.getName()))
-            thisWidget = new ComponentName(this, FixerWidget.class);
-        else
-            thisWidget = new ComponentName(this, FixerWidgetSmall.class);
-        AppWidgetManager manager = AppWidgetManager.getInstance(this);
-        manager.updateAppWidget(thisWidget, updateViews);
     }
 
     public static RemoteViews doUpdate(Context context, Intent intent) {
@@ -75,5 +60,21 @@ public class UpdateService extends IntentService {
         Intent i = new Intent(ctxt, service);
         i.putExtra(WIDGET_PROVIDER_NAME, provider);
         return i;
+    }
+
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        // Build the widget update for today
+        RemoteViews updateViews = doUpdate(this, intent);
+
+        // Push update for this widget to the home screen
+        ComponentName thisWidget;
+        if (intent.getStringExtra(WIDGET_PROVIDER_NAME).equals(
+                FixerWidget.class.getName()))
+            thisWidget = new ComponentName(this, FixerWidget.class);
+        else
+            thisWidget = new ComponentName(this, FixerWidgetSmall.class);
+        AppWidgetManager manager = AppWidgetManager.getInstance(this);
+        manager.updateAppWidget(thisWidget, updateViews);
     }
 }

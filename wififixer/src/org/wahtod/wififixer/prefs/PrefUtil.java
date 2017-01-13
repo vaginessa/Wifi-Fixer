@@ -18,7 +18,11 @@
 
 package org.wahtod.wififixer.prefs;
 
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -31,14 +35,17 @@ import org.wahtod.wififixer.R;
 import org.wahtod.wififixer.legacy.EditorDetector;
 import org.wahtod.wififixer.prefs.PrefConstants.NetPref;
 import org.wahtod.wififixer.prefs.PrefConstants.Pref;
-import org.wahtod.wififixer.utility.*;
+import org.wahtod.wififixer.utility.AsyncWifiManager;
+import org.wahtod.wififixer.utility.BroadcastHelper;
+import org.wahtod.wififixer.utility.LogUtil;
+import org.wahtod.wififixer.utility.NotifUtil;
+import org.wahtod.wififixer.utility.StringUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 
 public class PrefUtil implements SharedPreferences.OnSharedPreferenceChangeListener {
-    private static volatile HashMap<String, Boolean> _flags = new HashMap<String, Boolean>();
     public static final String VALUE_KEY = "VALUE_KEY";
     /*
      * Actions for handler message bundles
@@ -54,6 +61,7 @@ public class PrefUtil implements SharedPreferences.OnSharedPreferenceChangeListe
     private static final String DATA_KEY = "DATA_KEY";
     private static final String INT_KEY = "INTKEY";
     private static final String NETPREFIX = "n_";
+    private static volatile HashMap<String, Boolean> _flags = new HashMap<String, Boolean>();
     private static WeakReference<PrefUtil> self;
     private static SharedPreferences _prefs;
     /*

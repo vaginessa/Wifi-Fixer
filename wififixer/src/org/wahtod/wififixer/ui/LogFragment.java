@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
 import org.wahtod.wififixer.R;
 import org.wahtod.wififixer.utility.LogOpenHelper;
 import org.wahtod.wififixer.utility.ThreadHandler;
@@ -79,6 +80,11 @@ public class LogFragment extends Fragment {
         super.onStop();
     }
 
+    private static class ViewHolder {
+        public TextView textView;
+        public ScrollView scrollView;
+    }
+
     private class GetAllEntries implements Runnable {
 
         @Override
@@ -110,11 +116,6 @@ public class LogFragment extends Fragment {
                 });
             }
         }
-    }
-
-    private static class ViewHolder {
-        public TextView textView;
-        public ScrollView scrollView;
     }
 
     protected class ScrollToBottom implements Runnable {

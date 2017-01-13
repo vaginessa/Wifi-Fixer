@@ -19,6 +19,7 @@
 package org.wahtod.wififixer.utility;
 
 import android.content.Context;
+
 import org.wahtod.wififixer.R;
 
 import java.lang.ref.WeakReference;
