@@ -1,5 +1,11 @@
 <application>
   <component name="LivePluginSettings">
     <option name="justInstalled" value="false" />
+    <option name="pluginsUsage">
+      <map>
+        <entry key="popupMenu" value="1" />
+        <entry key="registerAction" value="1" />
+      </map>
+    </option>
   </component>
 </application>
