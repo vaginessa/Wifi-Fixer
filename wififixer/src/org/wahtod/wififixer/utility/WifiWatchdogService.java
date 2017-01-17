@@ -22,6 +22,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+
 import org.wahtod.wififixer.R;
 import org.wahtod.wififixer.ui.MainActivity;
 

@@ -21,6 +21,7 @@ package org.wahtod.wififixer.widget;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
+
 import org.wahtod.wififixer.prefs.PrefConstants;
 import org.wahtod.wififixer.prefs.PrefUtil;
 

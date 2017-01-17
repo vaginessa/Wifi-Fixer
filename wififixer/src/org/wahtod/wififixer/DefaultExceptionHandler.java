@@ -21,7 +21,12 @@ package org.wahtod.wififixer;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Date;
 
@@ -39,6 +44,11 @@ public class DefaultExceptionHandler implements UncaughtExceptionHandler {
                 .getDefaultUncaughtExceptionHandler();
         _default = currentHandler;
         Thread.setDefaultUncaughtExceptionHandler(this);
+    }
+
+    public static void register(Context ctxt) {
+        if (!isRegistered)
+            new DefaultExceptionHandler(ctxt);
     }
 
     /*
@@ -87,10 +97,5 @@ public class DefaultExceptionHandler implements UncaughtExceptionHandler {
 		 * comes up on 2.2+
 		 */
         _default.uncaughtException(t, e);
-    }
-
-    public static void register(Context ctxt) {
-        if (!isRegistered)
-            new DefaultExceptionHandler(ctxt);
     }
 }

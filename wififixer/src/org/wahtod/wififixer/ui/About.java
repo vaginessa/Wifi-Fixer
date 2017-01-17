@@ -24,6 +24,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
+
 import org.wahtod.wififixer.R;
 
 public class About extends AppFragmentActivity {

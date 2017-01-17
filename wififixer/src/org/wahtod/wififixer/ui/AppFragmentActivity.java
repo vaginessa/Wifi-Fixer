@@ -25,6 +25,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import org.wahtod.wififixer.R;
 
 public abstract class AppFragmentActivity extends AppCompatActivity {

@@ -19,6 +19,7 @@
 package org.wahtod.wififixer.legacy;
 
 import android.content.Context;
+
 import org.wahtod.wififixer.WFMonitorService;
 import org.wahtod.wififixer.prefs.PrefUtil;
 

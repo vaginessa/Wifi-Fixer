@@ -21,6 +21,7 @@ package org.wahtod.wififixer.prefs;
 import android.content.Context;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+
 import org.wahtod.wififixer.R;
 import org.wahtod.wififixer.WFMonitor;
 import org.wahtod.wififixer.legacy.SleepPolicyHelper;

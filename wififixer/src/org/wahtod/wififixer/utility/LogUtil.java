@@ -33,6 +33,7 @@ import android.os.Environment;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.widget.EditText;
+
 import org.wahtod.wififixer.DefaultExceptionHandler;
 import org.wahtod.wififixer.R;
 import org.wahtod.wififixer.WFMonitorService;
@@ -40,7 +41,13 @@ import org.wahtod.wififixer.legacy.VersionedFile;
 import org.wahtod.wififixer.prefs.PrefConstants;
 import org.wahtod.wififixer.prefs.PrefUtil;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.List;
 
 public class LogUtil {
@@ -119,55 +126,8 @@ public class LogUtil {
         log(c, c.getString(resId));
     }
 
-    private static class SqlLogger implements Runnable {
-        String message;
-
-        public SqlLogger(String in) {
-            message = in;
-        }
-
-        @Override
-        public void run() {
-             /*
-         * Log to SQLite DB
-		 */
-            logHelper.expireEntries();
-            long id = logHelper.addLogEntry(message);
-        }
-    }
-
     private static void dumpLog(Context context, File file) {
         new Thread(new DumpLog(context, file)).start();
-    }
-
-    private static class DumpLog implements Runnable {
-        Context context;
-        File file;
-
-        DumpLog(final Context ctxt, File f) {
-            context = ctxt;
-            file = f;
-        }
-
-        @Override
-        public void run() {
-            try {
-                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file));
-                StringBuilder out = new StringBuilder(getLoggerHeader(context));
-                out.append(NEWLINE);
-                out.append(getBuildInfo());
-                out.append(NEWLINE);
-                if (hasStackTrace(context))
-                    out.append(getStackTrace(context));
-                LogOpenHelper logHelper = LogOpenHelper.newinstance(context);
-                out.append(logHelper.getAllEntries());
-                writer.write(out.toString());
-                writer.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     public static void sendLog(final Activity activity) {
@@ -275,5 +235,52 @@ public class LogUtil {
         }
         dumpLog(context, VersionedFile.getFile(context, LOGFILE));
         NotifUtil.showToast(context, context.getString(R.string.log_written));
+    }
+
+    private static class SqlLogger implements Runnable {
+        String message;
+
+        public SqlLogger(String in) {
+            message = in;
+        }
+
+        @Override
+        public void run() {
+             /*
+         * Log to SQLite DB
+		 */
+            logHelper.expireEntries();
+            long id = logHelper.addLogEntry(message);
+        }
+    }
+
+    private static class DumpLog implements Runnable {
+        Context context;
+        File file;
+
+        DumpLog(final Context ctxt, File f) {
+            context = ctxt;
+            file = f;
+        }
+
+        @Override
+        public void run() {
+            try {
+                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file));
+                StringBuilder out = new StringBuilder(getLoggerHeader(context));
+                out.append(NEWLINE);
+                out.append(getBuildInfo());
+                out.append(NEWLINE);
+                if (hasStackTrace(context))
+                    out.append(getStackTrace(context));
+                LogOpenHelper logHelper = LogOpenHelper.newinstance(context);
+                out.append(logHelper.getAllEntries());
+                writer.write(out.toString());
+                writer.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -33,6 +33,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import org.wahtod.wififixer.IntentConstants;
 import org.wahtod.wififixer.R;
 import org.wahtod.wififixer.ui.MainActivity;

@@ -22,6 +22,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
 import org.wahtod.wififixer.utility.NotifUtil;
 
 public class NotificationReceiver extends BroadcastReceiver {

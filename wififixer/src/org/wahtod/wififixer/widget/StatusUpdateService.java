@@ -24,6 +24,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.widget.RemoteViews;
+
 import org.wahtod.wififixer.R;
 import org.wahtod.wififixer.utility.NotifUtil;
 import org.wahtod.wififixer.utility.StatusMessage;

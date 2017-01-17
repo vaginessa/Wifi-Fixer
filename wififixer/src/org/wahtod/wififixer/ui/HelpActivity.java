@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
 import org.wahtod.wififixer.R;
 
 public class HelpActivity extends AppFragmentActivity {
