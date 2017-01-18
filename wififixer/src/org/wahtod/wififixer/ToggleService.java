@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.annotation.NonNull;
 
 import org.wahtod.wififixer.prefs.PrefConstants;
 import org.wahtod.wififixer.prefs.PrefUtil;
@@ -42,8 +43,9 @@ public class ToggleService extends Service {
     private static final int STOP = 202;
     private static final int STOP_DELAY = 6000;
     private static WeakReference<ToggleService> self;
+    @NonNull
     private static BroadcastReceiver wifiStateReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context context, @NonNull Intent intent) {
             Bundle extras = intent.getExtras();
             if (extras != null && extras.containsKey(WifiManager.EXTRA_WIFI_STATE)) {
                 int state = extras.getInt(WifiManager.EXTRA_WIFI_STATE,
@@ -52,10 +54,11 @@ public class ToggleService extends Service {
             }
         }
     };
+    @NonNull
     protected static Handler _handler = new Handler() {
 
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(@NonNull Message msg) {
             /*
              * Process MESSAGE
 			 */

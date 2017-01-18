@@ -22,6 +22,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 
 import org.wahtod.wififixer.prefs.PrefConstants.Pref;
 import org.wahtod.wififixer.prefs.PrefUtil;
@@ -41,8 +42,8 @@ public class BootReceiver extends BroadcastReceiver {
 	 */
 
     @Override
-    public void onReceive(Context context, Intent intent) {
-		/*
+    public void onReceive(@NonNull Context context, Intent intent) {
+        /*
 		 * For boot completed, check DISABLESERVICE if false, start the service
 		 * loader run
 		 */

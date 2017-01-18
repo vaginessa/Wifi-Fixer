@@ -30,6 +30,7 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.widget.EditText;
@@ -58,12 +59,12 @@ public class LogUtil {
     private static LogOpenHelper logHelper;
     private static ThreadHandler _logHandler;
 
-    private static boolean hasStackTrace(Context context) {
+    private static boolean hasStackTrace(@NonNull Context context) {
         return context.getFileStreamPath(
                 DefaultExceptionHandler.EXCEPTIONS_FILENAME).exists();
     }
 
-    private static String getStackTrace(Context context) {
+    private static String getStackTrace(@NonNull Context context) {
         StringBuilder trace = new StringBuilder();
         DataInputStream d;
         try {
@@ -106,7 +107,7 @@ public class LogUtil {
         return WFMonitorService.class.getSimpleName();
     }
 
-    public static void log(Context context, String an,
+    public static void log(@NonNull Context context, String an,
                            String m) {
         if (logHelper == null)
             logHelper = LogOpenHelper.newinstance(context);
@@ -118,11 +119,11 @@ public class LogUtil {
         _logHandler.get().post(new SqlLogger(m));
     }
 
-    public static void log(Context context, String m) {
+    public static void log(@NonNull Context context, String m) {
         log(context, getLogTag(), m);
     }
 
-    public static void log(Context c, int resId) {
+    public static void log(@NonNull Context c, int resId) {
         log(c, c.getString(resId));
     }
 
@@ -130,7 +131,7 @@ public class LogUtil {
         new Thread(new DumpLog(context, file)).start();
     }
 
-    public static void sendLog(final Activity activity) {
+    public static void sendLog(@NonNull final Activity activity) {
         /*
          * Gets appropriate dir and filename on sdcard across API versions.
 		 */
@@ -171,7 +172,7 @@ public class LogUtil {
         issueDialog.show();
     }
 
-    public static void sendIssueReport(Activity activity, String report, File file) {
+    public static void sendIssueReport(@NonNull Activity activity, String report, File file) {
         Intent sendIntent = new Intent(Intent.ACTION_SEND);
         sendIntent.setType(activity.getString(R.string.log_mimetype));
         sendIntent.putExtra(Intent.EXTRA_EMAIL,
@@ -190,7 +191,7 @@ public class LogUtil {
                 activity.getString(R.string.emailintent)),1);
     }
 
-    public static void deleteLog(Context context, File file) {
+    public static void deleteLog(Context context, @NonNull File file) {
         /*
          * Delete old log
 		 */
@@ -200,7 +201,7 @@ public class LogUtil {
                     R.string.logfile_delete_err_toast);
     }
 
-    private static String getLoggerHeader(Context context) {
+    private static String getLoggerHeader(@NonNull Context context) {
         PackageManager pm = context.getPackageManager();
         int version = -1;
         String vstring = "no code";
@@ -226,7 +227,7 @@ public class LogUtil {
         return message.toString();
     }
 
-    public static void writeLogtoSd(Context context) {
+    public static void writeLogtoSd(@NonNull Context context) {
         if (Environment.getExternalStorageState() != null
                 && !(Environment.getExternalStorageState()
                 .contains(Environment.MEDIA_MOUNTED))) {

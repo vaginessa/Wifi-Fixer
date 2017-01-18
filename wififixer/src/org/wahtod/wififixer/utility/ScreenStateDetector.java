@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 
 import org.wahtod.wififixer.legacy.VersionedScreenState;
 
@@ -39,10 +40,12 @@ public class ScreenStateDetector {
 
     private static final int SCREEN_EVENT_OFF = 0;
     private static final int SCREEN_EVENT_ON = 1;
+    @NonNull
     private static ArrayList<WeakReference<OnScreenStateChangedListener>> _clients = new ArrayList<WeakReference<OnScreenStateChangedListener>>();
+    @NonNull
     private static Handler statehandler = new Handler() {
         @Override
-        public void handleMessage(Message message) {
+        public void handleMessage(@NonNull Message message) {
             switch (message.what) {
                 case SCREEN_EVENT_OFF:
                     onScreenEvent(false);
@@ -55,9 +58,10 @@ public class ScreenStateDetector {
         }
     };
     private static ScreenStateDetector _screenStateDetector;
+    @NonNull
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context context, @NonNull Intent intent) {
             String iAction = intent.getAction();
 
             if (iAction.equals(Intent.ACTION_SCREEN_ON))
@@ -67,7 +71,7 @@ public class ScreenStateDetector {
         }
     };
 
-    private ScreenStateDetector(Context context) {
+    private ScreenStateDetector(@NonNull Context context) {
             /*
 			 * Register for screen state events
 			 *
@@ -106,13 +110,13 @@ public class ScreenStateDetector {
                     listener));
     }
 
-    public static ScreenStateDetector newInstance(Context context) {
+    public static ScreenStateDetector newInstance(@NonNull Context context) {
         if (_screenStateDetector == null)
             _screenStateDetector = new ScreenStateDetector(context.getApplicationContext());
         return _screenStateDetector;
     }
 
-    public void unregister(Context context) {
+    public void unregister(@NonNull Context context) {
         BroadcastHelper.unregisterReceiver(context, receiver);
     }
 

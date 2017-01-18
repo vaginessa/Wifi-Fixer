@@ -19,6 +19,7 @@
 package org.wahtod.wififixer.utility;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.wahtod.wififixer.R;
 
@@ -31,7 +32,7 @@ public class LoggingWakeLock extends WakeLock {
     private WeakReference<Context> ctxt;
     private String caller;
 
-    public LoggingWakeLock(Context context, String c) {
+    public LoggingWakeLock(@NonNull Context context, String c) {
         super(context);
         caller = c;
         ctxt = new WeakReference<Context>(context);

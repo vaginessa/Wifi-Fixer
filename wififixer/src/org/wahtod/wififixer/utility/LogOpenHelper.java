@@ -23,6 +23,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.NonNull;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -47,7 +48,7 @@ public class LogOpenHelper extends SQLiteOpenHelper {
         logObservable = new LogObservable();
     }
 
-    public static LogOpenHelper newinstance(Context context) {
+    public static LogOpenHelper newinstance(@NonNull Context context) {
         if (_instance == null) {
             _instance = new LogOpenHelper(context.getApplicationContext());
         }
@@ -55,7 +56,7 @@ public class LogOpenHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
+    public void onCreate(@NonNull SQLiteDatabase db) {
         String query = "CREATE TABLE " + TABLE_NAME + "(" + ID_KEY + " INTEGER PRIMARY KEY," +
                 TEXT_KEY + " TEXT," +
                 TIMESTAMP_KEY + " DATE DEFAULT (datetime('now','localtime')))";
@@ -63,7 +64,7 @@ public class LogOpenHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(@NonNull SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
     }
@@ -73,6 +74,7 @@ public class LogOpenHelper extends SQLiteOpenHelper {
         database.execSQL(query);
     }
 
+    @NonNull
     public synchronized String getEntry(long id) {
         if (id == 0) {
             return "";
@@ -90,6 +92,7 @@ public class LogOpenHelper extends SQLiteOpenHelper {
         return out.toString();
     }
 
+    @NonNull
     public synchronized String getAllEntries() {
         StringBuilder out = new StringBuilder();
         String query = "SELECT * FROM " + TABLE_NAME;

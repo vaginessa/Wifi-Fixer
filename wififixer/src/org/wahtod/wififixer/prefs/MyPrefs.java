@@ -21,6 +21,7 @@ package org.wahtod.wififixer.prefs;
 import android.content.Context;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 
 import org.wahtod.wififixer.R;
 import org.wahtod.wififixer.WFMonitor;
@@ -36,13 +37,13 @@ public class MyPrefs extends PrefUtil {
     private WFMonitor wifi;
     private Context context;
 
-    private MyPrefs(Context c) {
+    private MyPrefs(@NonNull Context c) {
         super(c);
         context = c.getApplicationContext();
         wifi = WFMonitor.newInstance(c);
     }
 
-    public static MyPrefs newInstance(Context c) {
+    public static MyPrefs newInstance(@NonNull Context c) {
         if (_prefUtil == null)
             _prefUtil = new MyPrefs(c.getApplicationContext());
         return _prefUtil;
@@ -89,7 +90,7 @@ public class MyPrefs extends PrefUtil {
     }
 
     @Override
-    public void postValChanged(PrefConstants.Pref p) {
+    public void postValChanged(@NonNull PrefConstants.Pref p) {
         switch (p) {
 
             case WIFILOCK:

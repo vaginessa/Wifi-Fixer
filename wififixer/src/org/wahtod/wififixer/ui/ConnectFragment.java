@@ -22,6 +22,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiConfiguration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -63,7 +65,8 @@ public class ConnectFragment extends Fragment implements OnClickListener {
     /*
      * Reflection magic ahead
      */
-    private static WifiConfiguration addHiddenFields(WifiConfiguration w) {
+    @NonNull
+    private static WifiConfiguration addHiddenFields(@NonNull WifiConfiguration w) {
         try {
             Field f = w.getClass().getField(IP_ASSIGNMENT);
             Field f2 = w.getClass().getField(PROXY_SETTINGS);
@@ -84,13 +87,14 @@ public class ConnectFragment extends Fragment implements OnClickListener {
         return w;
     }
 
+    @NonNull
     public static ConnectFragment newInstance(WFScanResult n) {
         ConnectFragment f = new ConnectFragment();
         f.mNetwork = n;
         return f;
     }
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.connect_fragment, null);
     }
@@ -106,6 +110,7 @@ public class ConnectFragment extends Fragment implements OnClickListener {
         return n;
     }
 
+    @NonNull
     private WifiConfiguration getKeyAppropriateConfig(String password) {
         WifiConfiguration wf = new WifiConfiguration();
         if (wf.toString().contains(BUGGED)) {
@@ -187,14 +192,14 @@ public class ConnectFragment extends Fragment implements OnClickListener {
         f.commit();
     }
 
-    private void closeInputMethod(View e) {
+    private void closeInputMethod(@NonNull View e) {
         InputMethodManager imm = (InputMethodManager) getActivity()
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(e.getWindowToken(), 0);
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState == null) {
             /*
@@ -228,12 +233,13 @@ public class ConnectFragment extends Fragment implements OnClickListener {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mNetwork != null)
             outState.putBundle(NETWORK_KEY, mNetwork.toBundle());
     }
 
+    @Nullable
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
         /*

@@ -25,6 +25,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.wahtod.wififixer.prefs.PrefConstants.Pref;
 import org.wahtod.wififixer.prefs.PrefUtil;
@@ -40,6 +42,7 @@ public class StatusDispatcher {
     private static final int WIDGET_REFRESH_DELAY = 5000;
     private static final int WIDGET_REFRESH = 115;
     private static final int REFRESH = 1233;
+    @Nullable
     public static StatusMessage _statusMessage;
     private static WeakReference<Context> c;
     private static WeakReference<Handler> host;
@@ -47,9 +50,10 @@ public class StatusDispatcher {
      * Essentially, a Leaky Bucket that throttles Widget messages to one every
      * WIDGET_REFRESH_DELAY seconds
      */
+    @Nullable
     private static Handler messagehandler = new Handler() {
         @Override
-        public void handleMessage(Message message) {
+        public void handleMessage(@NonNull Message message) {
             if (_statusMessage != null)
                 switch (message.what) {
                     case WIDGET_REFRESH:
@@ -73,15 +77,16 @@ public class StatusDispatcher {
                 }
         }
     };
+    @NonNull
     private BroadcastReceiver messagereceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context context, @NonNull Intent intent) {
             Message in = messagehandler.obtainMessage(REFRESH);
             in.setData(intent.getExtras());
             messagehandler.sendMessage(in);
         }
     };
 
-    public StatusDispatcher(Context context, Handler myhost) {
+    public StatusDispatcher(@NonNull Context context, Handler myhost) {
         _statusMessage = new StatusMessage();
         c = new WeakReference<Context>(context);
         host = new WeakReference<Handler>(myhost);
@@ -89,6 +94,7 @@ public class StatusDispatcher {
                 new IntentFilter(REFRESH_INTENT), true);
     }
 
+    @Nullable
     public StatusMessage getStatusMessage() {
         return _statusMessage;
     }
@@ -105,7 +111,7 @@ public class StatusDispatcher {
         clearQueue();
     }
 
-    public void refreshWidget(StatusMessage n) {
+    public void refreshWidget(@Nullable StatusMessage n) {
         clearQueue();
         if (n == null)
             messagehandler.sendEmptyMessage(WIDGET_REFRESH);

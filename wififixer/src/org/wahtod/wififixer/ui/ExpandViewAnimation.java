@@ -18,6 +18,7 @@
 
 package org.wahtod.wififixer.ui;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
@@ -29,7 +30,7 @@ public class ExpandViewAnimation extends Animation {
     private LayoutParams mLayoutParams;
     private int mBottomMargin;
 
-    public ExpandViewAnimation(View view, int duration) {
+    public ExpandViewAnimation(@NonNull View view, int duration) {
         setDuration(duration);
         mLayoutParams = (LayoutParams) view.getLayoutParams();
         mView = view;

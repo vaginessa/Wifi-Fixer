@@ -19,6 +19,7 @@
 package org.wahtod.wififixer.ui;
 
 import android.app.Dialog;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.WindowManager;
@@ -27,7 +28,7 @@ public class BaseDialogFragment extends AppCompatDialogFragment {
     public static final String FRAGMENT_KEY = "FRAGMENT";
     public static final String METHOD = "newInstance";
 
-    protected static void setDialog(DialogFragment f) {
+    protected static void setDialog(@NonNull DialogFragment f) {
         Dialog d = f.getDialog();
         if (d != null) {
             d.setCanceledOnTouchOutside(true);

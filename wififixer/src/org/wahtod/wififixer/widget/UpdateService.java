@@ -24,6 +24,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
 
 import org.wahtod.wififixer.R;
@@ -35,7 +36,7 @@ public class UpdateService extends IntentService {
         super("UpdateService");
     }
 
-    public static RemoteViews doUpdate(Context context, Intent intent) {
+    public static RemoteViews doUpdate(@NonNull Context context, @NonNull Intent intent) {
 
         // Create an Intent to send widget command to WidgetReceiver
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,
@@ -55,6 +56,7 @@ public class UpdateService extends IntentService {
         return views;
     }
 
+    @NonNull
     public static Intent updateIntent(Context ctxt,
                                       @SuppressWarnings("rawtypes") Class service, String provider) {
         Intent i = new Intent(ctxt, service);
@@ -63,7 +65,7 @@ public class UpdateService extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleIntent(@NonNull Intent intent) {
         // Build the widget update for today
         RemoteViews updateViews = doUpdate(this, intent);
 

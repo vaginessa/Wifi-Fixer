@@ -16,6 +16,7 @@
   ~        along with this program.  If not, see http://www.gnu.org/licenses
   -->
 
+<!--suppress ALL -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:id="@+id/widget_target"
@@ -51,9 +52,9 @@
             style="@style/Wftext.small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/signal"
             android:layout_alignParentBottom="true"
             android:layout_gravity="left"
+        android:layout_toRightOf="@id/signal"
             android:gravity="bottom"
             android:paddingBottom="10dp"
             android:paddingLeft="10dp"
