@@ -65,7 +65,7 @@ public class HelpActivity extends AppFragmentActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         //ActionBarDetector.handleHome(this, item);
         return super.onOptionsItemSelected(item);
     }

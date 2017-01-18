@@ -68,8 +68,7 @@ public class DefaultExceptionHandler implements UncaughtExceptionHandler {
         DataOutputStream data;
         try {
             data = new DataOutputStream(appcontext.openFileOutput(
-                    EXCEPTIONS_FILENAME, Context.MODE_WORLD_READABLE
-                    | Context.MODE_APPEND));
+                    EXCEPTIONS_FILENAME, 32769));
         } catch (FileNotFoundException e2) {
             /*
 			 * This can't happen: openFileOutput creates the file if it doesn't

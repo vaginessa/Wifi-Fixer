@@ -64,7 +64,6 @@ public class UpdateService extends IntentService {
         return i;
     }
 
-    @Override
     protected void onHandleIntent(@NonNull Intent intent) {
         // Build the widget update for today
         RemoteViews updateViews = doUpdate(this, intent);
