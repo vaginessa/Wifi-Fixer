@@ -4,6 +4,8 @@
     <option name="FORCE_CLASSIC_VM" value="true" />
     <option name="DISABLE_JIT" value="true" />
     <option name="SKIP_SYNTHETIC_METHODS" value="true" />
+    <option name="SKIP_CONSTRUCTORS" value="true" />
+    <option name="SKIP_GETTERS" value="true" />
     <option name="SKIP_CLASSLOADERS" value="true" />
     <option name="RUN_HOTSWAP_AFTER_COMPILE" value="RunHotswapAlways" />
     <option name="COMPILE_BEFORE_HOTSWAP" value="true" />
@@ -71,7 +73,9 @@
     </filter>
   </component>
   <component name="XDebuggerSettings">
-    <data-views />
+    <data-views>
+      <sort-values>true</sort-values>
+    </data-views>
     <general>
       <option name="showDebuggerOnBreakpoint" value="false" />
     </general>
