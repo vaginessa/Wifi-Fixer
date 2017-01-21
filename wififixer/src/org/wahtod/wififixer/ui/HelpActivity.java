@@ -21,6 +21,8 @@ package org.wahtod.wififixer.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.webkit.WebSettings;
@@ -36,13 +38,13 @@ public class HelpActivity extends AppFragmentActivity {
     WebView webview;
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putString(CURRENT_URL, webview.getUrl());
         super.onSaveInstanceState(outState);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         getSupportActionBar().setDisplayHomeAsUpEnabled( true);
         setContentView(R.layout.help);
         webview = (WebView) findViewById(R.id.helpwebview);
@@ -63,7 +65,7 @@ public class HelpActivity extends AppFragmentActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         //ActionBarDetector.handleHome(this, item);
         return super.onOptionsItemSelected(item);
     }
@@ -88,7 +90,7 @@ public class HelpActivity extends AppFragmentActivity {
         private static final String GOOGLECODE = "http://code.google.com/p/android/issues/detail?id=21469";
 
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        public boolean shouldOverrideUrlLoading(@NonNull WebView view, @NonNull String url) {
             if (url.contains(MAILTO)) {
                 Intent sendIntent = new Intent(Intent.ACTION_SEND);
                 sendIntent.setType(MAILMIME);

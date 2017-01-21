@@ -29,6 +29,7 @@ import android.preference.CheckBoxPreference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.view.ActionMode;
 import android.view.MenuItem;
 
@@ -45,15 +46,10 @@ import java.util.List;
 
 public class PrefActivity extends AppCompatPreferenceActivity implements
         OnSharedPreferenceChangeListener {
-    @Override
-    public void onActionModeFinished(ActionMode mode) {
-        super.onActionModeFinished(mode);
-    }
-
     @SuppressWarnings("deprecation")
 
-    public static void processPrefChange(PreferenceScreen p,
-                                         SharedPreferences prefs, String key) {
+    public static void processPrefChange(@NonNull PreferenceScreen p,
+                                         @NonNull SharedPreferences prefs, @NonNull String key) {
         if (key.length() == 0)
             return;
         /*
@@ -149,6 +145,11 @@ public class PrefActivity extends AppCompatPreferenceActivity implements
     }
 
     @Override
+    public void onActionModeFinished(ActionMode mode) {
+        super.onActionModeFinished(mode);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -164,6 +165,38 @@ public class PrefActivity extends AppCompatPreferenceActivity implements
             getPreferenceScreen().getSharedPreferences()
                     .registerOnSharedPreferenceChangeListener(this);
         }
+    }
+
+    @Override
+    protected boolean isValidFragment(String fragmentName) {
+        return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+            getPreferenceScreen().getSharedPreferences()
+                    .unregisterOnSharedPreferenceChangeListener(this);
+        super.onDestroy();
+    }
+
+    @SuppressLint("NewApi")
+    @Override
+    public void onBuildHeaders(List<Header> target) {
+        loadHeadersFromResource(R.xml.preference_headers, target);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        //ActionBarDetector.handleHome(this, item);
+        if (item.getClass().getName().contains("support"))
+            startActivity(new Intent(this, MainActivity.class));
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(@NonNull SharedPreferences prefs, @NonNull String key) {
+        processPrefChange(getPreferenceScreen(), prefs, key);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -211,41 +244,9 @@ public class PrefActivity extends AppCompatPreferenceActivity implements
         }
 
         @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        public void onSharedPreferenceChanged(@NonNull SharedPreferences sharedPreferences, @NonNull String key) {
             PrefActivity.processPrefChange(this.getPreferenceScreen(),
                     sharedPreferences, key);
         }
-    }
-
-    @Override
-    protected boolean isValidFragment(String fragmentName) {
-        return true;
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
-            getPreferenceScreen().getSharedPreferences()
-                    .unregisterOnSharedPreferenceChangeListener(this);
-        super.onDestroy();
-    }
-
-    @SuppressLint("NewApi")
-    @Override
-    public void onBuildHeaders(List<Header> target) {
-        loadHeadersFromResource(R.xml.preference_headers, target);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        //ActionBarDetector.handleHome(this, item);
-        if (item.getClass().getName().contains("support"))
-            startActivity(new Intent(this, MainActivity.class));
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-        processPrefChange(getPreferenceScreen(), prefs, key);
     }
 }

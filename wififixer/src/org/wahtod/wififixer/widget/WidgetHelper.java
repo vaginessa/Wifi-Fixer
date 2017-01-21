@@ -21,6 +21,7 @@ package org.wahtod.wififixer.widget;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.wahtod.wififixer.prefs.PrefConstants;
 import org.wahtod.wififixer.prefs.PrefUtil;
@@ -29,7 +30,7 @@ import org.wahtod.wififixer.prefs.PrefUtil;
  * Created by zanshin on 8/21/14.
  */
 public class WidgetHelper {
-    public static void findAppWidgets(Context context) {
+    public static void findAppWidgets(@NonNull Context context) {
         ComponentName cm = new ComponentName(context, FixerWidget.class);
         ComponentName cm2 = new ComponentName(context, FixerWidgetSmall.class);
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);

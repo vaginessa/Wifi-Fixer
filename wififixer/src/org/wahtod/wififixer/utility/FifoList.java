@@ -19,6 +19,8 @@
 package org.wahtod.wififixer.utility;
 
 import android.net.wifi.SupplicantState;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,14 @@ public class FifoList extends ArrayList<Object> {
         length = s;
     }
 
+    private static int hashSum(@NonNull List<SupplicantState> collection) {
+        int sum = 0;
+        for (int n = 0; n < collection.size(); n++) {
+            sum += collection.get(n).hashCode();
+        }
+        return sum;
+    }
+
     @Override
     public boolean add(Object object) {
         if (this.size() < length)
@@ -45,7 +55,7 @@ public class FifoList extends ArrayList<Object> {
         return true;
     }
 
-    public boolean containsPattern(List<SupplicantState> collection) {
+    public boolean containsPattern(@NonNull List<SupplicantState> collection) {
         if (this.size() < collection.size())
             return false;
         int chash = hashSum(collection);
@@ -61,16 +71,9 @@ public class FifoList extends ArrayList<Object> {
         return false;
     }
 
-    private static int hashSum(List<SupplicantState> collection) {
-        int sum = 0;
-        for (int n = 0; n < collection.size(); n++) {
-            sum += collection.get(n).hashCode();
-        }
-        return sum;
-    }
-
+    @Nullable
     public SupplicantPattern containsPatterns(
-            List<SupplicantPattern> patterns) {
+            @NonNull List<SupplicantPattern> patterns) {
         for (SupplicantPattern n : patterns) {
             if (this.containsPattern(n.getPattern()))
                 return n;

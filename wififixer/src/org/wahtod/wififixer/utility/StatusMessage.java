@@ -22,6 +22,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 public class StatusMessage {
     public static final String SSID_KEY = "SSID";
@@ -46,23 +48,26 @@ public class StatusMessage {
         status = new Bundle();
     }
 
+    @NonNull
     public static StatusMessage getNew() {
         return new StatusMessage();
     }
 
-    public static StatusMessage fromMessage(Message m) {
+    @NonNull
+    public static StatusMessage fromMessage(@NonNull Message m) {
         StatusMessage s = new StatusMessage();
         s.status.putAll(m.getData());
         return s;
     }
 
-    public static StatusMessage fromIntent(Intent i) {
+    @NonNull
+    public static StatusMessage fromIntent(@NonNull Intent i) {
         StatusMessage s = new StatusMessage();
         s.status = i.getBundleExtra(StatusDispatcher.STATUS_DATA_KEY);
         return s;
     }
 
-    public static void updateFromMessage(StatusMessage s, Message m) {
+    public static void updateFromMessage(@NonNull StatusMessage s, @NonNull Message m) {
         Bundle b = m.getData();
         if (b.containsKey(SSID_KEY) && b.getString(SSID_KEY) != null
                 && b.getString(SSID_KEY).length() > 1)
@@ -84,7 +89,7 @@ public class StatusMessage {
         }
     }
 
-    public static void send(Context context, StatusMessage tosend) {
+    public static void send(Context context, @NonNull StatusMessage tosend) {
         if (ScreenStateDetector.getScreenState(context)) {
             Intent i = new Intent(StatusDispatcher.REFRESH_INTENT);
             i.putExtras(tosend.status);
@@ -92,6 +97,7 @@ public class StatusMessage {
         }
     }
 
+    @NonNull
     @Override
     public String toString() {
         StringBuilder out = new StringBuilder(getSSID());
@@ -102,38 +108,45 @@ public class StatusMessage {
         return out.toString();
     }
 
+    @Nullable
     public String getLinkSpeed() {
         return status.getString(LINK_KEY);
     }
 
+    @NonNull
     public StatusMessage setLinkSpeed(String s) {
         status.putString(LINK_KEY, s);
         return this;
     }
 
+    @Nullable
     public String getSSID() {
         return status.getString(SSID_KEY);
     }
 
-    public StatusMessage setSSID(String s) {
+    @NonNull
+    public StatusMessage setSSID(@Nullable String s) {
         if (s == null)
             s = EMPTY;
         status.putString(SSID_KEY, StringUtil.removeQuotes(s));
         return this;
     }
 
+    @Nullable
     public String getStatus() {
         return status.getString(STATUS_KEY);
     }
 
-    public StatusMessage setStatus(String s) {
+    @NonNull
+    public StatusMessage setStatus(@Nullable String s) {
         if (s == null)
             s = EMPTY;
         status.putString(STATUS_KEY, s);
         return this;
     }
 
-    public StatusMessage setStatus(Context c, int s) {
+    @NonNull
+    public StatusMessage setStatus(@NonNull Context c, int s) {
         status.putString(STATUS_KEY, c.getString(s));
         return this;
     }
@@ -142,6 +155,7 @@ public class StatusMessage {
         return status.getInt(SIGNAL_KEY);
     }
 
+    @NonNull
     public StatusMessage setSignal(int i) {
         status.putInt(SIGNAL_KEY, i);
         return this;
@@ -151,6 +165,7 @@ public class StatusMessage {
         return status.getInt(SHOW_KEY);
     }
 
+    @NonNull
     public StatusMessage setShow(int sh) {
         status.putInt(SHOW_KEY, sh);
         return this;

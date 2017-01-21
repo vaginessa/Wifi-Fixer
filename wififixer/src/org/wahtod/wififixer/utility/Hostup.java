@@ -21,6 +21,8 @@ package org.wahtod.wififixer.utility;
 import android.content.Context;
 import android.net.DhcpInfo;
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.format.Formatter;
 
 import org.wahtod.wififixer.R;
@@ -59,20 +61,25 @@ public class Hostup {
     protected static volatile int mCurrentSession;
     protected static volatile boolean mFinished;
     private static Hostup _hostup;
+    @Nullable
     private static ThreadHandler _nethandler;
+    @Nullable
     private static ThreadHandler httpHandler;
+    @Nullable
     private static ThreadHandler icmpHandler;
     protected volatile WeakReference<Context> mContext;
+    @Nullable
     protected volatile Thread masterThread;
     private volatile String accesspointIP;
     private HostupResponse mClient;
-    private Hostup(Context c) {
+
+    private Hostup(@NonNull Context c) {
         mCurrentSession = 0;
         mContext = new WeakReference<Context>(c.getApplicationContext());
         disableConnectionReuse();
     }
 
-    public static Hostup newInstance(Context context) {
+    public static Hostup newInstance(@NonNull Context context) {
         if (_hostup == null)
             _hostup = new Hostup(context.getApplicationContext());
         else {
@@ -95,7 +102,7 @@ public class Hostup {
     }
 
     @SuppressWarnings("deprecation")
-    public void icmpCache(Context context) {
+    public void icmpCache(@NonNull Context context) {
         /*
          * Caches DHCP gateway IP for ICMP check
 		 */
@@ -155,7 +162,8 @@ public class Hostup {
     /*
      * Performs ICMP ping/echo and returns boolean success or failure
      */
-    private HostMessage icmpHostup(Context context) {
+    @NonNull
+    private HostMessage icmpHostup(@NonNull Context context) {
         HostMessage out = new HostMessage();
         out.timer.start();
 
@@ -180,7 +188,8 @@ public class Hostup {
     /*
      * Performs HTTP HEAD request and returns boolean success or failure
      */
-    private HostMessage getHttpHeaders(Context context) {
+    @NonNull
+    private HostMessage getHttpHeaders(@NonNull Context context) {
         /*
          * get URI
 		 */

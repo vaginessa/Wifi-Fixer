@@ -20,12 +20,13 @@ package org.wahtod.wififixer.legacy;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences.Editor;
+import android.support.annotation.NonNull;
 
 public class EditorHelperGB extends EditorDetector {
 
     @SuppressLint("NewApi")
     @Override
-    public void vcommit(Editor e) {
+    public void vcommit(@NonNull Editor e) {
         e.apply();
     }
 

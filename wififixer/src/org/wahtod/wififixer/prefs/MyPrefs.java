@@ -19,13 +19,17 @@
 package org.wahtod.wififixer.prefs;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 
 import org.wahtod.wififixer.R;
 import org.wahtod.wififixer.WFMonitor;
 import org.wahtod.wififixer.legacy.SleepPolicyHelper;
 import org.wahtod.wififixer.utility.LogUtil;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Created by zanshin on 12/2/13.
@@ -36,16 +40,26 @@ public class MyPrefs extends PrefUtil {
     private WFMonitor wifi;
     private Context context;
 
-    private MyPrefs(Context c) {
+    private MyPrefs(@NonNull Context c) {
         super(c);
         context = c.getApplicationContext();
         wifi = WFMonitor.newInstance(c);
     }
 
-    public static MyPrefs newInstance(Context c) {
+    public static MyPrefs newInstance(@NonNull Context c) {
         if (_prefUtil == null)
             _prefUtil = new MyPrefs(c.getApplicationContext());
         return _prefUtil;
+    }
+
+    @Override
+    public void putnetPref(@NonNull PrefConstants.NetPref pref, String network, int value) {
+        super.putnetPref(pref, network, value);
+    }
+
+    @Override
+    public int getnetPref(@NonNull Context context, @NonNull PrefConstants.NetPref pref, @NonNull String network) {
+        return super.getnetPref(context, pref, network);
     }
 
     private void setDefaultPreferences(Context context) {
@@ -77,6 +91,11 @@ public class MyPrefs extends PrefUtil {
     }
 
     @Override
+    public void unRegisterReceiver() {
+        super.unRegisterReceiver();
+    }
+
+    @Override
     public void loadPrefs() {
         /*
         * Set defaults. Doing here instead of activity because service
@@ -89,8 +108,28 @@ public class MyPrefs extends PrefUtil {
     }
 
     @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        super.onSharedPreferenceChanged(sharedPreferences, key);
+    }
+
+    @Override
+    void handleLoadPref(PrefConstants.Pref p) {
+        super.handleLoadPref(p);
+    }
+
+    @Override
+    void handlePrefChange(@NonNull PrefConstants.Pref p, boolean flagval) {
+        super.handlePrefChange(p, flagval);
+    }
+
+    @Override
+    void handleNetPrefChange(@NonNull PrefConstants.NetPref np, String network, int newvalue) {
+        super.handleNetPrefChange(np, network, newvalue);
+    }
+
+    @Override
     public void postValChanged(PrefConstants.Pref p) {
-        switch (p) {
+        switch (requireNonNull(p)) {
 
             case WIFILOCK:
                 if (wifi != null && PrefUtil.getFlag(PrefConstants.Pref.WIFILOCK)) {
@@ -153,9 +192,39 @@ public class MyPrefs extends PrefUtil {
     }
 
     @Override
+    public void preValChanged(@NonNull PrefConstants.Pref p) {
+        super.preValChanged(p);
+    }
+
+    @Override
     public void specialCase() {
         postValChanged(PrefConstants.Pref.DEBUG);
         postValChanged(PrefConstants.Pref.WIFILOCK);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
     }
 }
 

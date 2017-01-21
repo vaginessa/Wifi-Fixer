@@ -26,6 +26,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 
 import org.wahtod.wififixer.legacy.StrictModeDetector;
 import org.wahtod.wififixer.prefs.MyPrefs;
@@ -80,7 +81,7 @@ public class WFMonitorService extends Service implements
         }
     }
 
-    private void handleStart(Intent intent) {
+    private void handleStart(@Nullable Intent intent) {
 
         if (intent != null) {
             if (intent.hasExtra(ServiceAlarm.ALARM_START))

@@ -20,6 +20,7 @@ package org.wahtod.wififixer.utility;
 
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
+import android.support.annotation.NonNull;
 
 public class WFConfig {
     /*
@@ -33,8 +34,8 @@ public class WFConfig {
     public int level;
     public int failcount;
 
-    public WFConfig(ScanResult sResult, WifiConfiguration wConfig) {
-		/*
+    public WFConfig(@NonNull ScanResult sResult, WifiConfiguration wConfig) {
+        /*
 		 * Constructor for only use of object so far
 		 */
         level = sResult.level;
@@ -47,6 +48,7 @@ public class WFConfig {
         failcount = 0;
     }
 
+    @NonNull
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();

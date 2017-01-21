@@ -20,6 +20,8 @@ package org.wahtod.wififixer.utility;
 
 import android.net.wifi.ScanResult;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +33,11 @@ public class WFScanResult {
     public static final String FREQUENCY_BUNDLE_KEY = "FREQUENCY";
     public static final String LEVEL_BUNDLE_KEY = "LEVEL";
     public static final String BUNDLE_KEY = "WFSCANRESULT";
+    @Nullable
     public String SSID;
+    @Nullable
     public String BSSID;
+    @Nullable
     public String capabilities;
     public int level;
     public int frequency;
@@ -43,7 +48,7 @@ public class WFScanResult {
         BSSID = "";
     }
 
-    public WFScanResult(ScanResult result) {
+    public WFScanResult(@NonNull ScanResult result) {
         if (result.SSID == null)
             SSID = "";
         else
@@ -62,7 +67,8 @@ public class WFScanResult {
         frequency = result.frequency;
     }
 
-    public static WFScanResult fromBundle(Bundle bundle) {
+    @NonNull
+    public static WFScanResult fromBundle(@Nullable Bundle bundle) {
         WFScanResult out = new WFScanResult();
         if (bundle != null && bundle.containsKey(BUNDLE_KEY)) {
             Bundle fields = bundle.getBundle(BUNDLE_KEY);
@@ -75,8 +81,9 @@ public class WFScanResult {
         return out;
     }
 
+    @Nullable
     public static List<WFScanResult> fromScanResultArray(
-            List<ScanResult> results) {
+            @Nullable List<ScanResult> results) {
         if (results == null)
             return null;
 
@@ -101,7 +108,7 @@ public class WFScanResult {
     }
 
     @Override
-    public boolean equals(Object other) {
+    public boolean equals(@Nullable Object other) {
         if (other == null)
             return false;
         if (this.getClass() != other.getClass())
@@ -111,6 +118,7 @@ public class WFScanResult {
 
     }
 
+    @NonNull
     public Bundle toBundle() {
         Bundle wrapper = new Bundle();
         Bundle bundle = new Bundle();

@@ -21,6 +21,7 @@ package org.wahtod.wififixer.utility;
 import android.content.Context;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import android.support.annotation.NonNull;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -42,7 +43,7 @@ public class AsyncWifiManager {
         _threadHandler = new ThreadHandler("AsyncWifiManager");
     }
 
-    public static AsyncWifiManager get(Context context) {
+    public static AsyncWifiManager get(@NonNull Context context) {
         if (_self == null) {
             _self = new AsyncWifiManager();
             _self.appContext = context.getApplicationContext();
@@ -50,7 +51,7 @@ public class AsyncWifiManager {
         return _self;
     }
 
-    public synchronized static WifiManager getWifiManager(Context context) {
+    public synchronized static WifiManager getWifiManager(@NonNull Context context) {
         /*
          * Cache WifiManager in Application context
 		 */

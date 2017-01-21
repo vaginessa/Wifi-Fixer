@@ -27,6 +27,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -50,9 +51,10 @@ public class QuickSettingsFragment extends BaseDialogFragment {
     public static final String TAG = "TAG";
     protected static final String INTENT_ACTION = "INTENT_ACTION";
     private static WeakReference<QuickSettingsFragment> self;
+    @NonNull
     private static Handler wifiButtonHandler = new Handler() {
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(@NonNull Message msg) {
             int state = msg.getData().getInt(WifiManager.EXTRA_WIFI_STATE,
                     WifiManager.WIFI_STATE_UNKNOWN);
             switch (state) {
@@ -67,10 +69,11 @@ public class QuickSettingsFragment extends BaseDialogFragment {
             super.handleMessage(msg);
         }
     };
+    @NonNull
     private BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
 
         @Override
-        public void onReceive(Context c, Intent i) {
+        public void onReceive(Context c, @NonNull Intent i) {
             Bundle b = new Bundle();
             Message m = wifiButtonHandler.obtainMessage();
             b.putAll(i.getExtras());
@@ -82,8 +85,9 @@ public class QuickSettingsFragment extends BaseDialogFragment {
     private CheckBox serviceCheckBox;
     private CheckBox wifiCheckBox;
     private CheckBox logCheckBox;
+    @NonNull
     View.OnClickListener clicker = new View.OnClickListener() {
-        public void onClick(View v) {
+        public void onClick(@NonNull View v) {
             switch (v.getId()) {
                 case R.id.service_checkbox:
                     if (serviceCheckBox.isChecked()) {
@@ -123,6 +127,7 @@ public class QuickSettingsFragment extends BaseDialogFragment {
     };
     private Button sendLogButton;
 
+    @NonNull
     public static DialogFragment newInstance(String tag) {
         QuickSettingsFragment f = new QuickSettingsFragment();
         // Supply input as an argument.
@@ -133,6 +138,7 @@ public class QuickSettingsFragment extends BaseDialogFragment {
         return f;
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
@@ -147,7 +153,7 @@ public class QuickSettingsFragment extends BaseDialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.quicksettings_fragment, null);
         if (this.getDialog() != null) {

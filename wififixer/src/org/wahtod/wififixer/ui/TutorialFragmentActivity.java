@@ -21,6 +21,7 @@ package org.wahtod.wififixer.ui;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 
 import org.wahtod.wififixer.R;
@@ -42,9 +43,10 @@ public abstract class TutorialFragmentActivity extends AppFragmentActivity {
     private static final String CURRENT_PART = "TutorialFragmentActivity:CURRENT_PART";
     private static final long RESTORE_DELAY = 1000;
     private static WeakReference<TutorialFragmentActivity> self;
+    @NonNull
     private static Handler handler = new Handler() {
         @Override
-        public void handleMessage(Message message) {
+        public void handleMessage(@NonNull Message message) {
             switch (message.what) {
                 case TOAST:
                     NotifUtil.showToast(self.get(), message.arg1, TOAST_DELAY);
@@ -125,7 +127,7 @@ public abstract class TutorialFragmentActivity extends AppFragmentActivity {
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(CURRENT_PART)) {
             part = savedInstanceState.getInt(CURRENT_PART);
             handler.sendEmptyMessageDelayed(part, RESTORE_DELAY);
@@ -134,7 +136,7 @@ public abstract class TutorialFragmentActivity extends AppFragmentActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putInt(CURRENT_PART, part);
         super.onSaveInstanceState(outState);
     }
