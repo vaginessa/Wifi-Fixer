@@ -31,6 +31,9 @@ import org.wahtod.wififixer.R;
 
 public class UpdateService extends IntentService {
     static final String WIDGET_PROVIDER_NAME = "WIDGET_PROVIDER_NAME";
+    private static Context ctxt;
+    private static Class service;
+    private static String provider;
 
     public UpdateService() {
         super("UpdateService");
@@ -59,6 +62,9 @@ public class UpdateService extends IntentService {
     @NonNull
     public static Intent updateIntent(Context ctxt,
                                       @SuppressWarnings("rawtypes") Class service, String provider) {
+        UpdateService.ctxt = ctxt;
+        UpdateService.service = service;
+        UpdateService.provider = provider;
         Intent i = new Intent(ctxt, service);
         i.putExtra(WIDGET_PROVIDER_NAME, provider);
         return i;
