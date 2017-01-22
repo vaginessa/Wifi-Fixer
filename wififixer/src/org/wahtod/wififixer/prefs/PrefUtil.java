@@ -46,13 +46,14 @@ import org.wahtod.wififixer.utility.StringUtil;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class PrefUtil implements SharedPreferences.OnSharedPreferenceChangeListener {
-    public static final String VALUE_KEY = "VALUE_KEY";
     /*
      * Actions for handler message bundles
      */
     public static final String INTENT_ACTION = "INTENT_ACTION";
+    private static final String VALUE_KEY = "VALUE_KEY";
     private static final String COLON = ":";
     /*
      * Intent Constants
@@ -64,7 +65,7 @@ public class PrefUtil implements SharedPreferences.OnSharedPreferenceChangeListe
     private static final String INT_KEY = "INTKEY";
     private static final String NETPREFIX = "n_";
     @NonNull
-    private static volatile HashMap<String, Boolean> _flags = new HashMap<String, Boolean>();
+    private static volatile HashMap<String, Boolean> _flags = new HashMap<>();
     private static WeakReference<PrefUtil> self;
     private static SharedPreferences _prefs;
     /*
@@ -78,6 +79,7 @@ public class PrefUtil implements SharedPreferences.OnSharedPreferenceChangeListe
         public void handleMessage(@NonNull Message message) {
             Bundle data = message.getData();
             String action = data.getString(INTENT_ACTION);
+            assert action != null;
             if (action.equals(VALUE_CHANGED_ACTION))
                 self.get().handlePrefChange(
                         Pref.get(data.getString(VALUE_KEY)),
@@ -110,17 +112,17 @@ public class PrefUtil implements SharedPreferences.OnSharedPreferenceChangeListe
     };
 
     public PrefUtil(@NonNull Context c) {
-        self = new WeakReference<PrefUtil>(this);
-        context = new WeakReference<Context>(c);
+        self = new WeakReference<>(this);
+        context = new WeakReference<>(c);
         getSharedPreferences(c).registerOnSharedPreferenceChangeListener(this);
         IntentFilter filter = new IntentFilter(VALUE_CHANGED_ACTION);
         filter.addAction(NETVALUE_CHANGED_ACTION);
         BroadcastHelper.registerReceiver(context.get(), changeReceiver, filter,
                 true);
-        netprefs = new HashMap<String, int[]>();
+        netprefs = new HashMap<>();
     }
 
-    public static SharedPreferences getSharedPreferences(@NonNull Context c) {
+    private static SharedPreferences getSharedPreferences(@NonNull Context c) {
         if (_prefs == null)
             _prefs = PreferenceManager.getDefaultSharedPreferences(c
                     .getApplicationContext());
@@ -138,16 +140,16 @@ public class PrefUtil implements SharedPreferences.OnSharedPreferenceChangeListe
         }
     }
 
-    public static void notifyNetPrefChange(Context c,
-                                           @NonNull NetPref netpref, @NonNull String netstring, int value) {
+    private static void notifyNetPrefChange(Context c,
+                                            @NonNull NetPref netpref, @NonNull String netstring, int value) {
         Intent intent = new Intent(NETVALUE_CHANGED_ACTION);
         intent.putExtra(VALUE_KEY, netpref.key());
-        intent.putExtra(NET_KEY, netstring.toString());
+        intent.putExtra(NET_KEY, netstring);
         intent.putExtra(INT_KEY, value);
         BroadcastHelper.sendBroadcast(c, intent, true);
     }
 
-    public static String getnetworkString(@NonNull Context context, int network) {
+    private static String getnetworkString(@NonNull Context context, int network) {
         WifiManager wm = AsyncWifiManager.getWifiManager(context);
         if (!wm.isWifiEnabled())
             return context.getString(R.string.none);
@@ -180,16 +182,18 @@ public class PrefUtil implements SharedPreferences.OnSharedPreferenceChangeListe
         /*
          *  Is this a bssid or network string?
          */
+        assert network != null;
         if (network.matches("^([a-fA-F0-9][:-]){5}[a-fA-F0-9][:-]$")) {
             for (WifiConfiguration n : wifiConfigs) {
-                if (StringUtil.removeQuotes(n.BSSID).equals(network))
+                if (StringUtil.removeQuotes(n.BSSID).equals(network)) {
                     return n.networkId;
+                }
             }
         }
-        for (WifiConfiguration n : wifiConfigs) {
-            if (StringUtil.removeQuotes(n.SSID).equals(network))
+        for (WifiConfiguration n : wifiConfigs)
+            if (StringUtil.removeQuotes(n.SSID).equals(network)) {
                 return n.networkId;
-        }
+            }
         return -1;
     }
 
@@ -206,14 +210,14 @@ public class PrefUtil implements SharedPreferences.OnSharedPreferenceChangeListe
         return null;
     }
 
-    public static String getSafeFileName(@NonNull Context ctxt, @Nullable String filename) {
+    private static String getSafeFileName(@NonNull Context ctxt, @Nullable String filename) {
         if (filename == null)
             filename = ctxt.getString(R.string.none);
         return filename.replaceAll("[^a-zA-Z0-9]", "");
     }
 
-    public static int readNetworkPref(@NonNull Context ctxt, String network,
-                                      @NonNull NetPref pref) {
+    private static int readNetworkPref(@NonNull Context ctxt, String network,
+                                       @NonNull NetPref pref) {
         String key = NETPREFIX + network + pref.key();
         if (getSharedPreferences(ctxt).contains(key))
             return getSharedPreferences(ctxt).getInt(key, 0);
@@ -221,8 +225,8 @@ public class PrefUtil implements SharedPreferences.OnSharedPreferenceChangeListe
             return 0;
     }
 
-    public static void writeNetworkPref(@NonNull Context ctxt,
-                                        @NonNull String netstring, @NonNull NetPref pref, int value) {
+    private static void writeNetworkPref(@NonNull Context ctxt,
+                                         @NonNull String netstring, @NonNull NetPref pref, int value) {
         /*
          * Check for actual changed value if changed, notify
 		 */
@@ -280,19 +284,13 @@ public class PrefUtil implements SharedPreferences.OnSharedPreferenceChangeListe
         EditorDetector.commit(editor);
     }
 
-    public static void removeKey(@NonNull Context ctxt, String key) {
-        SharedPreferences.Editor editor = getSharedPreferences(ctxt).edit();
-        editor.remove(key);
-        EditorDetector.commit(editor);
-    }
-
     public static boolean getFlag(@NonNull Pref pref) {
         if (!_flags.containsKey(pref.key()))
             _flags.put(pref.key(), readBoolean(context.get(), pref.key()));
         return _flags.get(pref.key());
     }
 
-    public static void setFlag(@NonNull Pref pref, boolean flag) {
+    private static void setFlag(@NonNull Pref pref, boolean flag) {
         _flags.put(pref.key(), flag);
     }
 
@@ -386,13 +384,12 @@ public class PrefUtil implements SharedPreferences.OnSharedPreferenceChangeListe
         intTemp[pref.ordinal()] = value;
 
 
-        StringBuilder logstring = new StringBuilder(pref.key());
-        logstring.append(COLON);
-        logstring.append(network);
-        logstring.append(COLON);
-        logstring.append(String.valueOf(intTemp[pref.ordinal()]));
+        String logstring = pref.key() + COLON +
+                network +
+                COLON +
+                String.valueOf(intTemp[pref.ordinal()]);
         LogUtil.log(context.get(),
-                logstring.toString());
+                logstring);
 
 
         netprefs.put(network, intTemp);
@@ -404,7 +401,7 @@ public class PrefUtil implements SharedPreferences.OnSharedPreferenceChangeListe
         if (!netprefs.containsKey(network)) {
             int[] intarray = new int[NetPref.values().length];
             intarray[ordinal] = readNetworkPref(context, network, pref);
-            netprefs.put(network.toString(), intarray);
+            netprefs.put(network, intarray);
             return intarray[ordinal];
         } else
             return netprefs.get(network)[ordinal];
@@ -421,14 +418,12 @@ public class PrefUtil implements SharedPreferences.OnSharedPreferenceChangeListe
          * Log change of preference state
 	     */
         if (getSharedPreferences(c).contains(key)) {
-            StringBuilder l = new StringBuilder(
-                    c.getString(R.string.prefs_change));
-            l.append(key);
-            l.append(c.getString(R.string.colon));
-            l.append(String.valueOf(readBoolean(c, key)));
+            String l = c.getString(R.string.prefs_change) + key +
+                    c.getString(R.string.colon) +
+                    String.valueOf(readBoolean(c, key));
             LogUtil.log(c,
                     LogUtil.getLogTag(),
-                    l.toString());
+                    l);
         }
     }
 
@@ -464,11 +459,35 @@ public class PrefUtil implements SharedPreferences.OnSharedPreferenceChangeListe
 
     }
 
-    public void preValChanged(@NonNull Pref p) {
-        switch (p) {
+    public void preValChanged(Pref p) {
+        switch (Objects.requireNonNull(p)) {
         /*
          * Pre Value Changed here
 		 */
+            case WIFILOCK:
+                break;
+            case NOTIFICATIONS:
+                break;
+            case DISABLESERVICE:
+                break;
+            case DEBUG:
+                break;
+            case N1FIX2:
+                break;
+            case MANAGESLEEP:
+                break;
+            case STATUS_NOTIFICATION:
+                break;
+            case HASWIDGET:
+                break;
+            case WAKELOCK:
+                break;
+            case ATT_BLACKLIST:
+                break;
+            case MULTIBSSID:
+                break;
+            case FORCE_HTTP:
+                break;
         }
 
     }

@@ -18,6 +18,7 @@
 
 package org.wahtod.wififixer.utility;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -25,7 +26,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -44,11 +44,7 @@ import org.wahtod.wififixer.widget.WidgetReceiver;
 import java.util.ArrayList;
 
 public class NotifUtil {
-    public static final int STATNOTIFID = 2392;
-    public static final String ACTION_POP_NOTIFICATION = "org.wahtod.wififixer.ACTION_POP_NOTIFICATION";
     public static final String PENDINGPARCEL = "PENDING_PARCEL";
-    public static final String VSHOW_TAG = "VSHOW";
-    public static final String STAT_TAG = "STATNOTIF";
     /*
      * for SSID status in status notification
      */
@@ -65,10 +61,14 @@ public class NotifUtil {
      */
     public static final int ICON_SET_SMALL = 0;
     public static final int ICON_SET_LARGE = 1;
-    public static int NOTIFID = 2494;
+    private static final int STATNOTIFID = 2392;
+    private static final String ACTION_POP_NOTIFICATION = "org.wahtod.wififixer.ACTION_POP_NOTIFICATION";
+    private static final String VSHOW_TAG = "VSHOW";
+    private static final String STAT_TAG = "STATNOTIF";
+    private static int NOTIFID = 2494;
     private static int pendingIntentRequest = 0;
     @NonNull
-    private static ArrayList<NotificationHolder> _notifStack = new ArrayList<NotificationHolder>();
+    private static ArrayList<NotificationHolder> _notifStack = new ArrayList<>();
     @Nullable
     private static NotificationCompat.Builder mStatusBuilder;
 
@@ -77,18 +77,19 @@ public class NotifUtil {
         return pendingIntentRequest;
     }
 
-    public static int getStackSize() {
+    private static int getStackSize() {
         return _notifStack.size();
     }
 
     private static Notification build(Context ctxt, @NonNull NotificationCompat.Builder builder, @NonNull StatusMessage in) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            return builder.build();
+        return builder.build();
 
-        Intent intent = new Intent(ctxt, MainActivity.class).setAction(
+        Intent intent;
+        intent = new Intent(ctxt, MainActivity.class).setAction(
                 Intent.ACTION_MAIN).setFlags(
                 Intent.FLAG_ACTIVITY_NEW_TASK);
         Notification out = builder.build();
+        //noinspection deprecation
         out.icon = getIconfromSignal(in.getSignal(),
                 NotifUtil.ICON_SET_SMALL);
         out.iconLevel = in.getSignal();
@@ -134,6 +135,7 @@ public class NotifUtil {
                     );
 
         }
+        assert mStatusBuilder != null;
         mStatusBuilder.setContentTitle(m.getSSID());
         mStatusBuilder.setSmallIcon(R.drawable.notifsignal, m.getSignal());
         mStatusBuilder.setLargeIcon(BitmapFactory.decodeResource(ctxt.getResources(),
@@ -145,7 +147,7 @@ public class NotifUtil {
         nm.notify(NotifUtil.STAT_TAG, NotifUtil.STATNOTIFID, build(ctxt, mStatusBuilder, in));
     }
 
-    protected static void notify(@NonNull Context context, int id, String tag, Notification n) {
+    private static void notify(@NonNull Context context, int id, String tag, Notification n) {
         NotificationManager nm = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         nm.notify(tag, id, n);
@@ -196,16 +198,13 @@ public class NotifUtil {
 
     @NonNull
     private static NotificationCompat.Builder largeText(@NonNull Context context, @NonNull NotificationCompat.Builder builder) {
-        if (Build.VERSION.SDK_INT < 11)
-            return builder;
         builder.setStyle(new NotificationCompat.BigTextStyle().bigText(getNotificationsAsString()));
-        StringBuilder contentText = new StringBuilder(context.getString(R.string.youhave))
-                .append(" ")
-                .append(getStackSize())
-                .append(" ")
-                .append(context.getString(R.string.messages)
-                );
-        builder.setContentText(contentText.toString());
+        String contentText = context.getString(R.string.youhave) +
+                " " +
+                getStackSize() +
+                " " +
+                context.getString(R.string.messages);
+        builder.setContentText(contentText);
         builder.setNumber(getStackSize());
         builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(),
                 R.drawable.icon));
@@ -213,7 +212,7 @@ public class NotifUtil {
     }
 
     @NonNull
-    public static StringBuilder getNotificationsAsString() {
+    private static StringBuilder getNotificationsAsString() {
         StringBuilder out = new StringBuilder();
         for (NotificationHolder holder : _notifStack) {
             out.append(holder.tickerText);
@@ -234,7 +233,7 @@ public class NotifUtil {
         notify(context, NOTIFID, VSHOW_TAG, generateBuilder(context, holder).build());
     }
 
-    public static void cancel(@NonNull Context context, String tag, int id) {
+    private static void cancel(@NonNull Context context, String tag, int id) {
         NotificationManager nm = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         nm.cancel(tag, id);
@@ -245,7 +244,7 @@ public class NotifUtil {
     }
 
     @NonNull
-    public static StatusMessage validateStrings(@NonNull StatusMessage in) {
+    private static StatusMessage validateStrings(@NonNull StatusMessage in) {
         if (in.getSSID() == null)
             in.setSSID(StatusMessage.EMPTY);
         if (in.getStatus() == null)
@@ -305,7 +304,7 @@ public class NotifUtil {
 
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-        View layout = inflater.inflate(R.layout.toast, null);
+        @SuppressLint("InflateParams") View layout = inflater.inflate(R.layout.toast, null);
         ImageView image = (ImageView) layout.findViewById(R.id.icon);
         image.setImageResource(R.drawable.icon);
         TextView text = (TextView) layout.findViewById(R.id.text);
@@ -327,7 +326,7 @@ public class NotifUtil {
         String tickerText;
         PendingIntent contentIntent;
 
-        public NotificationHolder(String t, String m, PendingIntent p) {
+        NotificationHolder(String t, String m, PendingIntent p) {
             message = m;
             tickerText = t;
             contentIntent = p;
