@@ -31,7 +31,6 @@ import org.wahtod.wififixer.R;
 
 public class UpdateService extends IntentService {
     static final String WIDGET_PROVIDER_NAME = "WIDGET_PROVIDER_NAME";
-    private Intent intent;
 
     public UpdateService() {
         super("UpdateService");
@@ -66,7 +65,6 @@ public class UpdateService extends IntentService {
     }
 
     protected void onHandleIntent(@NonNull Intent intent) {
-        this.intent = intent;
         // Build the widget update for today
         RemoteViews updateViews = doUpdate(this, intent);
 
