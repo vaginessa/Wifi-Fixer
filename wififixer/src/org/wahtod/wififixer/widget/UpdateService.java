@@ -24,7 +24,9 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
+
 import org.wahtod.wififixer.R;
 
 public class UpdateService extends IntentService {
@@ -34,23 +36,7 @@ public class UpdateService extends IntentService {
         super("UpdateService");
     }
 
-    @Override
-    protected void onHandleIntent(Intent intent) {
-        // Build the widget update for today
-        RemoteViews updateViews = doUpdate(this, intent);
-
-        // Push update for this widget to the home screen
-        ComponentName thisWidget;
-        if (intent.getStringExtra(WIDGET_PROVIDER_NAME).equals(
-                FixerWidget.class.getName()))
-            thisWidget = new ComponentName(this, FixerWidget.class);
-        else
-            thisWidget = new ComponentName(this, FixerWidgetSmall.class);
-        AppWidgetManager manager = AppWidgetManager.getInstance(this);
-        manager.updateAppWidget(thisWidget, updateViews);
-    }
-
-    public static RemoteViews doUpdate(Context context, Intent intent) {
+    public static RemoteViews doUpdate(@NonNull Context context, @NonNull Intent intent) {
 
         // Create an Intent to send widget command to WidgetReceiver
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,
@@ -70,10 +56,26 @@ public class UpdateService extends IntentService {
         return views;
     }
 
+    @NonNull
     public static Intent updateIntent(Context ctxt,
                                       @SuppressWarnings("rawtypes") Class service, String provider) {
         Intent i = new Intent(ctxt, service);
         i.putExtra(WIDGET_PROVIDER_NAME, provider);
         return i;
+    }
+
+    protected void onHandleIntent(@NonNull Intent intent) {
+        // Build the widget update for today
+        RemoteViews updateViews = doUpdate(this, intent);
+
+        // Push update for this widget to the home screen
+        ComponentName thisWidget;
+        if (intent.getStringExtra(WIDGET_PROVIDER_NAME).equals(
+                FixerWidget.class.getName()))
+            thisWidget = new ComponentName(this, FixerWidget.class);
+        else
+            thisWidget = new ComponentName(this, FixerWidgetSmall.class);
+        AppWidgetManager manager = AppWidgetManager.getInstance(this);
+        manager.updateAppWidget(thisWidget, updateViews);
     }
 }

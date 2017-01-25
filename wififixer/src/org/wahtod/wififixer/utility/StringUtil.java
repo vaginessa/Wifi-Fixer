@@ -18,6 +18,9 @@
 
 package org.wahtod.wififixer.utility;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 public class StringUtil {
 
     public static final String EMPTYSTRING = "";
@@ -28,11 +31,13 @@ public class StringUtil {
     public static final String WPS = "WPS";
     public static final CharSequence ESS = "ESS";
 
+    @NonNull
     public static String addQuotes(String s) {
         return "\"" + s + "\"";
     }
 
-    public static String removeQuotes(String ssid) {
+    @Nullable
+    public static String removeQuotes(@Nullable String ssid) {
         if (ssid == null)
             return EMPTYSTRING;
         else if (ssid.endsWith("\"") && ssid.startsWith("\"")) {
@@ -54,14 +59,16 @@ public class StringUtil {
         return s;
     }
 
-    public static String getLongCapabilitiesString(String capabilities) {
+    @NonNull
+    public static String getLongCapabilitiesString(@NonNull String capabilities) {
         if (capabilities.length() == 0)
             return OPEN;
         else
             return capabilities;
     }
 
-    public static String getCapabilitiesString(String capabilities) {
+    @NonNull
+    public static String getCapabilitiesString(@NonNull String capabilities) {
         if (capabilities.length() == 0)
             return OPEN;
         else if (capabilities.contains(WEP))

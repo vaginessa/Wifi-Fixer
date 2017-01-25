@@ -20,11 +20,13 @@ package org.wahtod.wififixer.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import org.wahtod.wififixer.R;
 
 public abstract class AppFragmentActivity extends AppCompatActivity {
@@ -47,7 +49,7 @@ public abstract class AppFragmentActivity extends AppCompatActivity {
     /* Handles item selections */
     @SuppressLint("NewApi")
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         super.onOptionsItemSelected(item);
         switch (item.getItemId()) {

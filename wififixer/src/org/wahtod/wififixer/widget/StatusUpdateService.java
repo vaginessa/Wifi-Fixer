@@ -23,7 +23,9 @@ import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
+
 import org.wahtod.wififixer.R;
 import org.wahtod.wififixer.utility.NotifUtil;
 import org.wahtod.wififixer.utility.StatusMessage;
@@ -34,7 +36,7 @@ public class StatusUpdateService extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleIntent(@NonNull Intent intent) {
         boolean large = intent.getStringExtra(
                 UpdateService.WIDGET_PROVIDER_NAME).equals(
                 FixerWidget.class.getName());

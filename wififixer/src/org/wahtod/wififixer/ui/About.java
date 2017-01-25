@@ -22,8 +22,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.MenuItem;
 import android.widget.TextView;
+
 import org.wahtod.wififixer.R;
 
 public class About extends AppFragmentActivity {
@@ -42,7 +44,7 @@ public class About extends AppFragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    void setText(TextView view) {
+    void setText(@NonNull TextView view) {
         PackageManager pm = this.getPackageManager();
         String vers;
         try {

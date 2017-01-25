@@ -19,6 +19,7 @@
 package org.wahtod.wififixer.ui;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
 import org.wahtod.wififixer.R;
 import org.wahtod.wififixer.utility.LogOpenHelper;
 import org.wahtod.wififixer.utility.ThreadHandler;
@@ -40,6 +42,7 @@ public class LogFragment extends Fragment {
     private LogObserver logObserver;
     private ThreadHandler updaterThread;
 
+    @NonNull
     public static LogFragment newInstance(Bundle bundle) {
         LogFragment f = new LogFragment();
         f.setArguments(bundle);
@@ -55,7 +58,7 @@ public class LogFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.log_fragment, null);
         _views = new ViewHolder();
@@ -77,6 +80,11 @@ public class LogFragment extends Fragment {
     public void onStop() {
         sqlLogger.unregisterLogObserver(logObserver);
         super.onStop();
+    }
+
+    private static class ViewHolder {
+        public TextView textView;
+        public ScrollView scrollView;
     }
 
     private class GetAllEntries implements Runnable {
@@ -110,11 +118,6 @@ public class LogFragment extends Fragment {
                 });
             }
         }
-    }
-
-    private static class ViewHolder {
-        public TextView textView;
-        public ScrollView scrollView;
     }
 
     protected class ScrollToBottom implements Runnable {

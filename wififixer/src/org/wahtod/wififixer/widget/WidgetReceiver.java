@@ -24,6 +24,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+
 import org.wahtod.wififixer.R;
 import org.wahtod.wififixer.ToggleService;
 import org.wahtod.wififixer.WFBroadcastReceiver;
@@ -45,9 +47,10 @@ public class WidgetReceiver extends BroadcastReceiver {
     public static final String TOGGLE_WIFI = "org.wahtod.wififixer.WidgetReceiver.WIFI_TOGGLE";
     public static final String REASSOCIATE = "org.wahtod.wififixer.WidgetReceiver.WIFI_REASSOCIATE";
     private static WeakReference<Context> ctxt;
+    @NonNull
     private static Handler handler = new Handler() {
         @Override
-        public void handleMessage(Message message) {
+        public void handleMessage(@NonNull Message message) {
             String action = message.getData().getString(PrefUtil.INTENT_ACTION);
             /*
              * Turn on WIFI
@@ -97,13 +100,13 @@ public class WidgetReceiver extends BroadcastReceiver {
     }
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(Context context, @NonNull Intent intent) {
         ctxt = new WeakReference<Context>(context);
         handleIntent(context, intent);
     }
 
-    public void handleIntent(Context context, Intent intent) {
-		/*
+    public void handleIntent(Context context, @NonNull Intent intent) {
+        /*
 		 * Dispatch intent commands to handler
 		 */
         Message message = handler.obtainMessage();

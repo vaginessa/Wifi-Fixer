@@ -27,6 +27,8 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,9 +54,10 @@ public class StatusFragment extends Fragment {
     private static final String DBM = "dBm";
     private static final String MB = "Mb";
     private static WeakReference<StatusFragment> self;
+    @Nullable
     private static Handler drawhandler = new Handler() {
         @Override
-        public void handleMessage(Message message) {
+        public void handleMessage(@NonNull Message message) {
             /*
              * handle new scanresult
 			 * asynchronously (to avoid ANR)
@@ -70,8 +73,9 @@ public class StatusFragment extends Fragment {
                 /*
                  * Change status text
 				 */
-                    if (message == null)
+                    if (message == null) {
                         return;
+                    }
                     if (!message.getData().isEmpty() && self.get()._views != null)
                         self.get()._views.setStatus(StatusMessage
                                 .fromMessage(message).getStatus());
@@ -79,8 +83,9 @@ public class StatusFragment extends Fragment {
             }
         }
     };
+    @Nullable
     private BroadcastReceiver statusreceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context context, @NonNull Intent intent) {
 
 			/*
              * Dispatch intent commands to handler
@@ -94,8 +99,10 @@ public class StatusFragment extends Fragment {
             drawhandler.sendMessage(message);
         }
     };
+    @Nullable
     private ViewHolder _views;
 
+    @NonNull
     public static StatusFragment newInstance(int num) {
         StatusFragment f = new StatusFragment();
         // Supply num input as an argument.
@@ -123,7 +130,7 @@ public class StatusFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.status, null);
         _views = new ViewHolder(v);
@@ -195,7 +202,7 @@ public class StatusFragment extends Fragment {
         private TextView status;
         private ImageView icon;
 
-        public ViewHolder(View container) {
+        public ViewHolder(@NonNull View container) {
             linkspeed = (TextView) container.findViewById(R.id.linkspeed);
             ssid = (TextView) container.findViewById(R.id.SSID);
             signal = (TextView) container.findViewById(R.id.signal);

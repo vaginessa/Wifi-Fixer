@@ -28,6 +28,8 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -55,6 +57,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
     public static final String TAG = "KSABFWKRFBWT";
     private static final String NETWORK_KEY = "WFNETWORK";
     protected static WeakReference<AboutFragment> self;
+    @NonNull
     private static Handler handler = new Handler() {
         @Override
         public void handleMessage(Message message) {
@@ -87,8 +90,9 @@ public class AboutFragment extends Fragment implements OnClickListener {
         }
     };
     protected WFScanResult mNetwork;
+    @NonNull
     private BroadcastReceiver scanreceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context context, @NonNull Intent intent) {
             /*
              * Dispatch intent commands to handler
 			 */
@@ -102,8 +106,10 @@ public class AboutFragment extends Fragment implements OnClickListener {
             handler.sendMessage(message);
         }
     };
+    @Nullable
     private ViewHolder _views;
 
+    @NonNull
     public static AboutFragment newInstance(WFScanResult r) {
         AboutFragment f = new AboutFragment();
         f.mNetwork = r;
@@ -127,7 +133,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.about_fragment, null, false);
         Button b = (Button) v.findViewById(R.id.ssid);
@@ -136,7 +142,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         _views = new ViewHolder(view);
     }
@@ -154,7 +160,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         /*
          * Restore Network
@@ -171,7 +177,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mNetwork != null)
             outState.putBundle(NETWORK_KEY, mNetwork.toBundle());
@@ -189,6 +195,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
         refreshViews();
     }
 
+    @Nullable
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
         /*
@@ -225,7 +232,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
         private TextView frequency;
         private TextView level;
 
-        ViewHolder(View parent) {
+        ViewHolder(@NonNull View parent) {
             ssid = (TextView) parent.findViewById(R.id.ssid);
             bssid = (TextView) parent.findViewById(R.id.bssid);
             capabilities = (TextView) parent.findViewById(R.id.capabilities);

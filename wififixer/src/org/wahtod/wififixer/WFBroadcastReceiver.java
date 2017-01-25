@@ -25,6 +25,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+
 import org.wahtod.wififixer.prefs.PrefConstants;
 import org.wahtod.wififixer.prefs.PrefConstants.Pref;
 import org.wahtod.wififixer.prefs.PrefUtil;
@@ -45,14 +47,15 @@ public final class WFBroadcastReceiver extends BroadcastReceiver {
     private static final String AUTH_ACTION = "org.wahtod.wififixer.AUTH";
     private static final String AUTHSTRING = "31415927";
     private static WeakReference<Context> ctxt;
+    @NonNull
     private static Handler handler = new Handler() {
         @Override
-        public void handleMessage(Message message) {
+        public void handleMessage(@NonNull Message message) {
             dispatchIntent(message.getData());
         }
     };
 
-    private static void handleWidgetAction(Context context) {
+    private static void handleWidgetAction(@NonNull Context context) {
         int command;
         /*
          * Handle null value possible if prefs not initialized yet
@@ -84,7 +87,7 @@ public final class WFBroadcastReceiver extends BroadcastReceiver {
         }
     }
 
-    private static void dispatchIntent(Bundle data) {
+    private static void dispatchIntent(@NonNull Bundle data) {
         /*
          * Respond to manifest intents
 		 */
@@ -141,7 +144,7 @@ public final class WFBroadcastReceiver extends BroadcastReceiver {
         }
     }
 
-    private static void handleConnectAction(Bundle data) {
+    private static void handleConnectAction(@NonNull Bundle data) {
         String ssid = data.getString(IntentConstants.SSID);
         if (ssid != null) {
             int network = PrefUtil.getNid(ctxt.get(), ssid);
@@ -155,7 +158,7 @@ public final class WFBroadcastReceiver extends BroadcastReceiver {
         }
     }
 
-    private static void handleAuthAction(Bundle data) {
+    private static void handleAuthAction(@NonNull Bundle data) {
         if (data.containsKey(AUTHEXTRA)
                 && data.getString(AUTHEXTRA).contains(AUTHSTRING)) {
             LogUtil.log(ctxt.get(), ctxt.get().getString(R.string.authed));
@@ -210,12 +213,12 @@ public final class WFBroadcastReceiver extends BroadcastReceiver {
     }
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(Context context, @NonNull Intent intent) {
         ctxt = new WeakReference<Context>(context);
         handleIntent(context, intent);
     }
 
-    private void handleIntent(Context context, Intent intent) {
+    private void handleIntent(Context context, @NonNull Intent intent) {
         /*
          * Dispatches the broadcast intent to the handler for processing
 		 */

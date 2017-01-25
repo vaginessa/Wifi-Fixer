@@ -25,6 +25,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
+
 import org.wahtod.wififixer.WFMonitorService;
 import org.wahtod.wififixer.prefs.PrefConstants.Pref;
 import org.wahtod.wififixer.prefs.PrefUtil;
@@ -42,7 +44,7 @@ public final class ServiceAlarm extends Object {
     public static final long STARTDELAY = 30000;
     private static final long NODELAY = 0;
 
-    public static boolean alarmExists(Context context, Intent intent) {
+    public static boolean alarmExists(Context context, @NonNull Intent intent) {
         return (PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) != null);
     }
 
@@ -60,14 +62,14 @@ public final class ServiceAlarm extends Object {
      * Makes sure that if package is updated WFMonitorService
      * respects disabled state
      */
-    public static void enforceServicePrefs(Context context) {
+    public static void enforceServicePrefs(@NonNull Context context) {
         if (PrefUtil.readBoolean(context, Pref.DISABLESERVICE.key()))
             setComponentEnabled(context, WFMonitorService.class, false);
         else
             setComponentEnabled(context, WFMonitorService.class, true);
     }
 
-    public static void setComponentEnabled(Context context,
+    public static void setComponentEnabled(@NonNull Context context,
                                            Class<?> cls, Boolean state) {
         PackageManager pm = context.getPackageManager();
         ComponentName service = new ComponentName(context, cls);
@@ -83,18 +85,18 @@ public final class ServiceAlarm extends Object {
         }
     }
 
-    public static void setServiceAlarm(Context c,
+    public static void setServiceAlarm(@NonNull Context c,
                                        boolean initialdelay) {
         addAlarm(c, initialdelay, true, PERIOD,
                 createPendingIntent(c, PendingIntent.FLAG_UPDATE_CURRENT));
     }
 
-    public static void addAlarm(Context c, long delay,
+    public static void addAlarm(@NonNull Context c, long delay,
                                 boolean repeating, long period, PendingIntent p) {
         registerAlarm(c, delay, repeating, period, p);
     }
 
-    public static void addAlarm(Context c, boolean initialdelay,
+    public static void addAlarm(@NonNull Context c, boolean initialdelay,
                                 boolean repeating, long period, PendingIntent p) {
         if (initialdelay)
             registerAlarm(c, PERIOD, repeating, period, p);
@@ -102,8 +104,8 @@ public final class ServiceAlarm extends Object {
             registerAlarm(c, NODELAY, repeating, period, p);
     }
 
-    public static void registerAlarm(Context c, long delay,
-                                      boolean repeating, long period, PendingIntent p) {
+    public static void registerAlarm(@NonNull Context c, long delay,
+                                     boolean repeating, long period, PendingIntent p) {
         AlarmManager mgr = (AlarmManager) c
                 .getSystemService(Context.ALARM_SERVICE);
         if (repeating)
@@ -114,13 +116,13 @@ public final class ServiceAlarm extends Object {
                     SystemClock.elapsedRealtime() + delay, p);
     }
 
-    public static void unsetAlarm(Context c) {
+    public static void unsetAlarm(@NonNull Context c) {
         AlarmManager mgr = (AlarmManager) c
                 .getSystemService(Context.ALARM_SERVICE);
         mgr.cancel(createPendingIntent(c, 0));
     }
 
-    public static void unsetAlarm(Context c, PendingIntent p) {
+    public static void unsetAlarm(@NonNull Context c, PendingIntent p) {
         AlarmManager mgr = (AlarmManager) c
                 .getSystemService(Context.ALARM_SERVICE);
         mgr.cancel(p);

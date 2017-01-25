@@ -30,12 +30,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.app.ActionBar;
 import android.util.SparseArray;
 import android.view.ViewGroup;
+
 import org.wahtod.wififixer.DefaultExceptionHandler;
 import org.wahtod.wififixer.R;
 import org.wahtod.wififixer.WFMonitorService;
@@ -70,15 +73,16 @@ public class MainActivity extends TutorialFragmentActivity implements
      */
     private static final long NAG_DELAY = 3000;
     private static WeakReference<MainActivity> self;
+    @NonNull
     private static Handler handler = new Handler() {
         @Override
-        public void handleMessage(Message message) {
+        public void handleMessage(@NonNull Message message) {
             self.get().handleIntentMessage(message);
         }
     };
     private BaseViewPager mBasePager;
 
-    private static void startwfService(Context context) {
+    private static void startwfService(@NonNull Context context) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         boolean hasService = false;
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -90,7 +94,7 @@ public class MainActivity extends TutorialFragmentActivity implements
             context.startService(new Intent(context, WFMonitorService.class));
     }
 
-    private static void nagNotification(Context context) {
+    private static void nagNotification(@NonNull Context context) {
         /*
          * Nag for donation
 		 */
@@ -117,7 +121,7 @@ public class MainActivity extends TutorialFragmentActivity implements
         }
     }
 
-    private void bundleIntent(Intent intent) {
+    private void bundleIntent(@NonNull Intent intent) {
         /*
          * Dispatch intent commands to handler
 		 */
@@ -137,7 +141,7 @@ public class MainActivity extends TutorialFragmentActivity implements
         LogUtil.deleteLog(this, new File(this.getFilesDir(), LogUtil.LOGFILE));
     }
 
-    private void handleIntentMessage(Message message) {
+    private void handleIntentMessage(@NonNull Message message) {
         if (message.getData().isEmpty())
             return;
         Bundle data = message.getData();
@@ -255,7 +259,7 @@ public class MainActivity extends TutorialFragmentActivity implements
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@NonNull Intent intent) {
         setIntent(intent);
         bundleIntent(intent);
         super.onNewIntent(intent);
@@ -332,6 +336,7 @@ public class MainActivity extends TutorialFragmentActivity implements
     }
 
     public class PagerAdapter extends FragmentStatePagerAdapter {
+        @NonNull
         SparseArray<Fragment> fragmentArray = new SparseArray<Fragment>();
 
         public PagerAdapter(FragmentManager fm) {
@@ -344,6 +349,7 @@ public class MainActivity extends TutorialFragmentActivity implements
             super.destroyItem(container, position, object);
         }
 
+        @NonNull
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             Fragment f = (Fragment) super.instantiateItem(container, position);
@@ -356,6 +362,7 @@ public class MainActivity extends TutorialFragmentActivity implements
             return 3;
         }
 
+        @Nullable
         @Override
         public Fragment getItem(int position) {
             switch (position) {
