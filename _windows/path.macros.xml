@@ -1,6 +1,0 @@
-<application>
-  <component name="PathMacrosImpl">
-    <macro name="GRADLE_HOME" value="C:/gradle-3.5-20170125000024+0000-all/gradle-3.5-20170125000024+0000/bin" />
-    <macro name="JAVA_HOME" value="C:/Program Files/Java/jdk1.8.0_121" />
-  </component>
-</application>
