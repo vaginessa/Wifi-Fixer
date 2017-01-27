@@ -3,6 +3,5 @@
     <entry key="analyze.exceptions.on.the.fly" value="true" />
     <entry key="debugger.mayBringFrameToFrontOnBreakpoint" value="false" />
     <entry key="debugger.watches.in.variables" value="false" />
-    <entry key="vcs.annotations.preload" value="true" />
   </component>
 </application>
