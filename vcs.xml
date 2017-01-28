@@ -6,8 +6,12 @@
           <option name="url" value="https://github.com/dewens12/Wifi-Fixer.git" />
           <option name="userName" value="" />
         </UrlAndUserName>
+        <UrlAndUserName>
+          <option name="url" value="https://github.com/fubuki/firefox.git" />
+          <option name="userName" value="" />
+        </UrlAndUserName>
       </list>
     </option>
-    <option name="cloneParentDir" value="C:\Users\ewens.HGSC\Documents\GitHub\Wifi-Fixer" />
+    <option name="cloneParentDir" value="C:\Users\ewens.HGSC\Documents\GitHub\firefox2" />
   </component>
 </application>
