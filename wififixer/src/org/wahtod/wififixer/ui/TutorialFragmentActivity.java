@@ -21,12 +21,12 @@ package org.wahtod.wififixer.ui;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 
 import org.wahtod.wififixer.R;
 import org.wahtod.wififixer.prefs.PrefConstants;
 import org.wahtod.wififixer.prefs.PrefUtil;
+import org.wahtod.wififixer.utility.LogUtil;
 import org.wahtod.wififixer.utility.NotifUtil;
 
 import java.lang.ref.WeakReference;
@@ -42,11 +42,14 @@ public abstract class TutorialFragmentActivity extends AppFragmentActivity {
     private static final int TOAST_DELAY = 4000;
     private static final String CURRENT_PART = "TutorialFragmentActivity:CURRENT_PART";
     private static final long RESTORE_DELAY = 1000;
+
+    private int part = -1;
+    private ViewPager pv;
     private static WeakReference<TutorialFragmentActivity> self;
-    @NonNull
+
     private static Handler handler = new Handler() {
         @Override
-        public void handleMessage(@NonNull Message message) {
+        public void handleMessage(Message message) {
             switch (message.what) {
                 case TOAST:
                     NotifUtil.showToast(self.get(), message.arg1, TOAST_DELAY);
@@ -101,12 +104,6 @@ public abstract class TutorialFragmentActivity extends AppFragmentActivity {
             }
         }
     };
-    private int part = -1;
-    private ViewPager pv;
-
-    public static Message getMessage(int message, int data) {
-        return handler.obtainMessage(message, data, 0);
-    }
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -120,14 +117,14 @@ public abstract class TutorialFragmentActivity extends AppFragmentActivity {
         }
     }
 
-
+    @Override
     protected void onPause() {
         removeAllMessages();
         super.onPause();
     }
 
     @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(CURRENT_PART)) {
             part = savedInstanceState.getInt(CURRENT_PART);
             handler.sendEmptyMessageDelayed(part, RESTORE_DELAY);
@@ -136,7 +133,7 @@ public abstract class TutorialFragmentActivity extends AppFragmentActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
+    protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(CURRENT_PART, part);
         super.onSaveInstanceState(outState);
     }
@@ -150,5 +147,9 @@ public abstract class TutorialFragmentActivity extends AppFragmentActivity {
     public void runTutorial() {
         handler.sendEmptyMessage(PART1);
         PrefUtil.writeBoolean(this, PrefConstants.TUTORIAL, true);
+    }
+
+    public static Message getMessage(int message, int data) {
+        return handler.obtainMessage(message, data, 0);
     }
 }

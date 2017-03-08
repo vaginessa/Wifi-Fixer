@@ -21,11 +21,7 @@ package org.wahtod.wififixer.ui;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.*;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.wifi.ScanResult;
@@ -34,9 +30,8 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.view.ActionMode.Callback;
@@ -46,12 +41,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import org.wahtod.wififixer.R;
 import org.wahtod.wififixer.WFMonitor;
@@ -78,10 +69,9 @@ public class KnownNetworksFragment extends Fragment {
     private static List<String> knownnetworks;
     private static List<String> known_in_range;
     private static ListView mListView;
-    @Nullable
     private static Handler scanhandler = new Handler() {
         @Override
-        public void handleMessage(@NonNull Message message) {
+        public void handleMessage(Message message) {
             if (self.get().getActivity() == null)
                 return;
 
@@ -113,30 +103,9 @@ public class KnownNetworksFragment extends Fragment {
             }
         }
     };
-    @Nullable
-    protected Object mActionMode;
-    @Nullable
-    protected String mSSID;
-    @NonNull
-    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE:
-                    removeNetwork(PrefUtil.getNid(getContext(), mSSID));
-                    break;
-
-                case DialogInterface.BUTTON_NEGATIVE:
-                    // Ok, do nothing
-                    break;
-            }
-        }
-    };
-    private OnFragmentPauseRequestListener mFragmentPauseRequestListener;
-    @Nullable
     public Callback mActionModeCallback = new Callback() {
         @Override
-        public boolean onCreateActionMode(@NonNull ActionMode mode, Menu menu) {
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             if (!isWifiOn(getContext()))
                 return false;
 
@@ -174,7 +143,7 @@ public class KnownNetworksFragment extends Fragment {
         }
 
         @Override
-        public boolean onActionItemClicked(@NonNull ActionMode mode, @NonNull MenuItem item) {
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             int n = PrefUtil.getNid(getContext(), mSSID);
             int i = item.getItemId();
             switch (i) {
@@ -222,12 +191,28 @@ public class KnownNetworksFragment extends Fragment {
             return true;
         }
     };
-    @NonNull
+    protected Object mActionMode;
+    protected String mSSID;
+    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    removeNetwork(PrefUtil.getNid(getContext(), mSSID));
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    // Ok, do nothing
+                    break;
+            }
+        }
+    };
+    private OnFragmentPauseRequestListener mFragmentPauseRequestListener;
     private OnItemLongClickListener il = new OnItemLongClickListener() {
 
         @SuppressLint("NewApi")
         @Override
-        public boolean onItemLongClick(AdapterView<?> parent, @NonNull View v, int p,
+        public boolean onItemLongClick(AdapterView<?> parent, View v, int p,
                                        long id) {
 
             TextView ssid = (TextView) v.findViewById(R.id.ssid);
@@ -243,7 +228,6 @@ public class KnownNetworksFragment extends Fragment {
 
         }
     };
-    @NonNull
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             /*
@@ -258,7 +242,6 @@ public class KnownNetworksFragment extends Fragment {
         }
     };
 
-    @NonNull
     public static KnownNetworksFragment newInstance(int num) {
         KnownNetworksFragment f = new KnownNetworksFragment();
         // Supply num input as an argument.
@@ -268,8 +251,7 @@ public class KnownNetworksFragment extends Fragment {
         return f;
     }
 
-    @NonNull
-    public static List<String> getNetworks(@NonNull Context context) {
+    public static List<String> getNetworks(Context context) {
         WifiManager wm = AsyncWifiManager.getWifiManager(context);
         List<WifiConfiguration> wifiConfigs = wm.getConfiguredNetworks();
         if (wifiConfigs == null || wifiConfigs.isEmpty())
@@ -332,7 +314,7 @@ public class KnownNetworksFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         /*
          * Preserve ActionMode state
@@ -343,7 +325,7 @@ public class KnownNetworksFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null && savedInstanceState.containsKey(SSID_KEY)) {
             mSSID = savedInstanceState.getString(SSID_KEY);
@@ -374,7 +356,7 @@ public class KnownNetworksFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.knownnetworks, null);
         mListView = (ListView) v.findViewById(R.id.knownlist);
@@ -463,7 +445,7 @@ public class KnownNetworksFragment extends Fragment {
     }
 
     public interface OnFragmentPauseRequestListener {
-        void onFragmentPauseRequest(boolean state);
+        public void onFragmentPauseRequest(boolean state);
     }
 
     /*
@@ -503,8 +485,7 @@ public class KnownNetworksFragment extends Fragment {
             return position;
         }
 
-        @Nullable
-        public View getView(int position, @Nullable View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
             if (convertView == null) {
                 convertView = inflater
@@ -543,7 +524,7 @@ public class KnownNetworksFragment extends Fragment {
             return convertView;
         }
 
-        private boolean blackListCheck(@NonNull String item) {
+        private boolean blackListCheck(String item) {
             if (!PrefUtil.readBoolean(getContext(), PrefConstants.Pref.ATT_BLACKLIST.key()))
                 return false;
             else

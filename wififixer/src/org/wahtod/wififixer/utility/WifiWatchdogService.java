@@ -22,8 +22,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
-
 import org.wahtod.wififixer.R;
 import org.wahtod.wififixer.ui.MainActivity;
 
@@ -37,7 +35,6 @@ public class WifiWatchdogService extends Service {
     private static ThreadHandler mHandler;
     private volatile WakeLock _wakelock;
     private volatile boolean _waitFlag = false;
-    @NonNull
     private Runnable WifiEnablerRunnable = new Runnable() {
 
         @Override
@@ -46,7 +43,6 @@ public class WifiWatchdogService extends Service {
         }
     };
 
-    @NonNull
     private Runnable WatchdogRunnable = new Runnable() {
 
         @Override

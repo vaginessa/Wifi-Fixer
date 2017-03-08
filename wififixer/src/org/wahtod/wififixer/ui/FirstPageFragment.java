@@ -19,20 +19,16 @@
 package org.wahtod.wififixer.ui;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import org.wahtod.wififixer.R;
 
 public class FirstPageFragment extends Fragment {
     public static final String TAG = "BSJDFWFFFW";
 
-    @NonNull
     public static FirstPageFragment newInstance(int p) {
         FirstPageFragment f = new FirstPageFragment();
         Bundle args = new Bundle();
@@ -51,8 +47,8 @@ public class FirstPageFragment extends Fragment {
      * android.view.ViewGroup, android.os.Bundle)
      */
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.service, null);
 
         if (savedInstanceState == null) {

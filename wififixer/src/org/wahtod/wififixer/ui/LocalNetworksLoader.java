@@ -23,10 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.content.AsyncTaskLoader;
-
 import org.wahtod.wififixer.utility.AsyncWifiManager;
 import org.wahtod.wififixer.utility.BroadcastHelper;
 import org.wahtod.wififixer.utility.WFScanResult;
@@ -38,11 +35,9 @@ import java.util.List;
 
 public class LocalNetworksLoader extends AsyncTaskLoader<List<WFScanResult>> {
 
-    @Nullable
     private List<WFScanResult> mScanResults;
-    @NonNull
     private BroadcastReceiver receiver = new BroadcastReceiver() {
-        public void onReceive(Context context, @NonNull Intent intent) {
+        public void onReceive(Context context, Intent intent) {
             /*
              * Receive Scan Results
 			 */
@@ -58,7 +53,7 @@ public class LocalNetworksLoader extends AsyncTaskLoader<List<WFScanResult>> {
         }
     };
 
-    public LocalNetworksLoader(@NonNull Context context) {
+    public LocalNetworksLoader(Context context) {
         super(context);
     }
 
@@ -110,7 +105,6 @@ public class LocalNetworksLoader extends AsyncTaskLoader<List<WFScanResult>> {
         return new ArrayList<WFScanResult>();
     }
 
-    @Nullable
     @Override
     public List<WFScanResult> loadInBackground() {
         mScanResults = getNetworks(getContext());
@@ -151,7 +145,7 @@ public class LocalNetworksLoader extends AsyncTaskLoader<List<WFScanResult>> {
          * Comparator for sorting results by signal level
 		 */
     class SortBySignal implements Comparator<WFScanResult> {
-        public int compare(@NonNull WFScanResult o2, @NonNull WFScanResult o1) {
+        public int compare(WFScanResult o2, WFScanResult o1) {
                 /*
                  * Sort by signal
 				 */

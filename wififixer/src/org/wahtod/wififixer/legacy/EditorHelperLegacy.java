@@ -19,12 +19,11 @@
 package org.wahtod.wififixer.legacy;
 
 import android.content.SharedPreferences.Editor;
-import android.support.annotation.NonNull;
 
 public class EditorHelperLegacy extends EditorDetector {
 
     @Override
-    public void vcommit(@NonNull Editor e) {
+    public void vcommit(Editor e) {
         e.commit();
     }
 

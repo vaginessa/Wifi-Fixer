@@ -21,13 +21,12 @@ package org.wahtod.wififixer.legacy;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.PowerManager;
-import android.support.annotation.NonNull;
 
 public class EclairScreenState extends VersionedScreenState {
 
     @SuppressLint("NewApi")
     @Override
-    public boolean vgetScreenState(@NonNull Context context) {
+    public boolean vgetScreenState(Context context) {
         PowerManager pm = (PowerManager) context
                 .getSystemService(Context.POWER_SERVICE);
         return pm.isScreenOn();

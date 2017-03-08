@@ -22,13 +22,11 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-
 import org.wahtod.wififixer.utility.NotifUtil;
 
 public class NotificationReceiver extends BroadcastReceiver {
     @Override
-    public void onReceive(@NonNull Context context, @NonNull Intent intent) {
+    public void onReceive(Context context, Intent intent) {
         /*
          * If content intent, unparcel and handle bundled pending intent, pop stack
          * otherwise just cancel and clear the stack.

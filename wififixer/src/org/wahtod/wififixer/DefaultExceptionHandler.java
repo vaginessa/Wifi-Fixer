@@ -20,14 +20,8 @@ package org.wahtod.wififixer;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.annotation.NonNull;
 
-import java.io.DataOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Date;
 
@@ -38,18 +32,13 @@ public class DefaultExceptionHandler implements UncaughtExceptionHandler {
     private final Context appcontext;
 
     @SuppressLint("WorldReadableFiles")
-    public DefaultExceptionHandler(@NonNull Context context) {
+    public DefaultExceptionHandler(Context context) {
         isRegistered = true;
         appcontext = context.getApplicationContext();
         UncaughtExceptionHandler currentHandler = Thread
                 .getDefaultUncaughtExceptionHandler();
         _default = currentHandler;
         Thread.setDefaultUncaughtExceptionHandler(this);
-    }
-
-    public static void register(@NonNull Context ctxt) {
-        if (!isRegistered)
-            new DefaultExceptionHandler(ctxt);
     }
 
     /*
@@ -59,7 +48,7 @@ public class DefaultExceptionHandler implements UncaughtExceptionHandler {
      * @see java.lang.Thread.UncaughtExceptionHandler#uncaughtException(java.lang.Thread, java.lang.Throwable)
      */
     @SuppressLint("WorldReadableFiles")
-    public void uncaughtException(Thread t, @NonNull Throwable e) {
+    public void uncaughtException(Thread t, Throwable e) {
 
         Writer result = new StringWriter();
         PrintWriter printWriter = new PrintWriter(result);
@@ -68,7 +57,8 @@ public class DefaultExceptionHandler implements UncaughtExceptionHandler {
         DataOutputStream data;
         try {
             data = new DataOutputStream(appcontext.openFileOutput(
-                    EXCEPTIONS_FILENAME, 32769));
+                    EXCEPTIONS_FILENAME, Context.MODE_WORLD_READABLE
+                    | Context.MODE_APPEND));
         } catch (FileNotFoundException e2) {
             /*
 			 * This can't happen: openFileOutput creates the file if it doesn't
@@ -97,5 +87,10 @@ public class DefaultExceptionHandler implements UncaughtExceptionHandler {
 		 * comes up on 2.2+
 		 */
         _default.uncaughtException(t, e);
+    }
+
+    public static void register(Context ctxt) {
+        if (!isRegistered)
+            new DefaultExceptionHandler(ctxt);
     }
 }

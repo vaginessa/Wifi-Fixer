@@ -26,18 +26,12 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
-
 import org.wahtod.wififixer.legacy.StrictModeDetector;
 import org.wahtod.wififixer.prefs.MyPrefs;
 import org.wahtod.wififixer.prefs.PrefConstants.Pref;
 import org.wahtod.wififixer.prefs.PrefUtil;
-import org.wahtod.wififixer.utility.LogUtil;
-import org.wahtod.wififixer.utility.ScreenStateDetector;
+import org.wahtod.wififixer.utility.*;
 import org.wahtod.wififixer.utility.ScreenStateDetector.OnScreenStateChangedListener;
-import org.wahtod.wififixer.utility.ServiceAlarm;
-import org.wahtod.wififixer.utility.StatusDispatcher;
-import org.wahtod.wififixer.utility.StatusMessage;
 import org.wahtod.wififixer.widget.WidgetHelper;
 
 public class WFMonitorService extends Service implements
@@ -49,9 +43,15 @@ public class WFMonitorService extends Service implements
 
     // Screen State SharedPref key
     public static final String SCREENOFF = "SCREENOFF";
+    // *****************************
+    private final static String EMPTYSTRING = "";
     protected static boolean screenstate;
     // Version
     private static int version = 0;
+    /*
+     * Preferences
+     */
+    private volatile MyPrefs prefs;
     private WFMonitor wifi;
     private ScreenStateDetector screenstateHandler;
 
@@ -81,7 +81,7 @@ public class WFMonitorService extends Service implements
         }
     }
 
-    private void handleStart(@Nullable Intent intent) {
+    private void handleStart(Intent intent) {
 
         if (intent != null) {
             if (intent.hasExtra(ServiceAlarm.ALARM_START))
@@ -120,7 +120,7 @@ public class WFMonitorService extends Service implements
         /*
          * Load Preferences
 		 */
-        MyPrefs prefs = MyPrefs.newInstance(this);
+        prefs = MyPrefs.newInstance(this);
         prefs.loadPrefs();
         /*
          * Set initial screen state
@@ -141,13 +141,14 @@ public class WFMonitorService extends Service implements
     }
 
     private void logStart() {
-        String out = "\n\n********************\n" +
-                getString(R.string.wififixerservice_build) + version +
-                "\n" +
-                "********************\n";
+        StringBuilder out = new StringBuilder();
+        out.append("\n\n********************\n");
+        out.append(getString(R.string.wififixerservice_build) + version);
+        out.append("\n");
+        out.append("********************\n");
 
         LogUtil.log(this, LogUtil.getLogTag(),
-                out);
+                out.toString());
     }
 
     @Override

@@ -20,8 +20,7 @@ package org.wahtod.wififixer.utility;
 
 import android.content.Context;
 import android.net.DhcpInfo;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.os.Build;
 import android.text.format.Formatter;
 
 import org.wahtod.wififixer.R;
@@ -30,64 +29,52 @@ import org.wahtod.wififixer.prefs.PrefUtil;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.*;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.RejectedExecutionException;
 
 public class Hostup {
-    protected static final String INET_LOOPBACK = "127.0.0.1";
-    protected static final String INET_INVALID = "0.0.0.0";
+    private volatile String accesspointIP;
+
+    public interface HostupResponse {
+        public void onHostupResponse(HostMessage hostMessage);
+    }
+
+    ;
     /*
      * getHostUp method: Performs network check calibrated with SetFailover
      */
     // Target for header check
-    private static final String FAILOVER = "www.google.com";
-    private static final String FAILOVER2 = "www.baidu.com";
-    private static final int HTTP_TYPE = 1;
-    private static final int ICMP_TYPE = 0;
-    private static final int TIMEOUT_EXTRA = 2000;
+    public static final String FAILOVER = "www.google.com";
+    public static final String FAILOVER2 = "www.baidu.com";
+    public static final int HTTP_TYPE = 1;
+    public static final int ICMP_TYPE = 0;
+    protected static int checktype = -1;
+    protected static final String INET_LOOPBACK = "127.0.0.1";
+    protected static final String INET_INVALID = "0.0.0.0";
+    protected static final int TIMEOUT_EXTRA = 2000;
     private static final int HTTP_TIMEOUT = 4000;
     private static final String REJECTED_EXECUTION = "Rejected Execution";
-    private static volatile HostMessage response;
-    private static volatile URI headURI;
-    private static volatile int reachable;
-    private static volatile int mCurrentSession;
-    private static volatile boolean mFinished;
-    private static int checktype = -1;
-    private static volatile String target;
     private static Hostup _hostup;
-    @Nullable
     private static ThreadHandler _nethandler;
-    @Nullable
+    protected static volatile String target;
+    protected static volatile HostMessage response;
+    protected static volatile URI headURI;
+    protected static volatile int reachable;
+    protected static volatile int mCurrentSession;
+    protected volatile WeakReference<Context> mContext;
+    protected volatile Thread masterThread;
+    protected static volatile boolean mFinished;
     private static ThreadHandler httpHandler;
-    @Nullable
     private static ThreadHandler icmpHandler;
-    private volatile WeakReference<Context> mContext;
-    @Nullable
-    private volatile Thread masterThread;
-    private volatile String accesspointIP;
     private HostupResponse mClient;
 
-    private Hostup(@NonNull Context c) {
+    private Hostup(Context c) {
         mCurrentSession = 0;
-        mContext = new WeakReference<>(c.getApplicationContext());
+        mContext = new WeakReference<Context>(c.getApplicationContext());
         disableConnectionReuse();
-    }
-
-    public static Hostup newInstance(@NonNull Context context) {
-        if (_hostup == null)
-            _hostup = new Hostup(context.getApplicationContext());
-        else {
-            httpHandler = new ThreadHandler(context.getString(R.string.httpcheckthread));
-            icmpHandler = new ThreadHandler(context.getString(R.string.icmpcheckthread));
-            _nethandler = new ThreadHandler(
-                    context.getString(R.string.netcheckthread));
-            _hostup.masterThread = _nethandler.getLooper().getThread();
-        }
-        return _hostup;
     }
 
     public void registerClient(HostupResponse client) {
@@ -100,22 +87,35 @@ public class Hostup {
     }
 
     @SuppressWarnings("deprecation")
-    private void icmpCache(@NonNull Context context) {
+    public void icmpCache(Context context) {
         /*
          * Caches DHCP gateway IP for ICMP check
 		 */
         try {
             DhcpInfo info = AsyncWifiManager.getWifiManager(context).getDhcpInfo();
             accesspointIP = (Formatter.formatIpAddress(info.gateway));
-            LogUtil.log(context, context.getString(R.string.cached_ip) +
-                    accesspointIP);
+            LogUtil.log(context, new StringBuilder(context.getString(R.string.cached_ip))
+                    .append(accesspointIP).toString());
         } catch (NullPointerException e) {
             if (PrefUtil.getFlag(PrefConstants.Pref.DEBUG))
                 LogUtil.log(context, "Invalid Gateway on ICMP cache");
         }
     }
 
-    private synchronized void complete(HostMessage h, int session) {
+    public static Hostup newInstance(Context context) {
+        if (_hostup == null)
+            _hostup = new Hostup(context.getApplicationContext());
+        else {
+            _hostup.httpHandler = new ThreadHandler(context.getString(R.string.httpcheckthread));
+            _hostup.icmpHandler = new ThreadHandler(context.getString(R.string.icmpcheckthread));
+            _nethandler = new ThreadHandler(
+                    context.getString(R.string.netcheckthread));
+            _hostup.masterThread = _nethandler.getLooper().getThread();
+        }
+        return _hostup;
+    }
+
+    protected synchronized void complete(HostMessage h, int session) {
         if (session == mCurrentSession) {
             mFinished = true;
             response = h;
@@ -146,12 +146,9 @@ public class Hostup {
          */
         if (checktype == ICMP_TYPE
                 & !PrefUtil.getFlag(PrefConstants.Pref.FORCE_HTTP))
-            if (icmpHandler != null) {
-                icmpHandler.get().post(new GetICMP(mCurrentSession));
-            } else {
-                assert httpHandler != null;
-                httpHandler.get().post(new GetHeaders(mCurrentSession));
-            }
+            icmpHandler.get().post(new GetICMP(mCurrentSession));
+        else
+            httpHandler.get().post(new GetHeaders(mCurrentSession));
 
         submitRunnable(new HostCheck(target));
     }
@@ -163,8 +160,7 @@ public class Hostup {
     /*
      * Performs ICMP ping/echo and returns boolean success or failure
      */
-    @NonNull
-    private HostMessage icmpHostup(@NonNull Context context) {
+    private HostMessage icmpHostup(Context context) {
         HostMessage out = new HostMessage();
         out.timer.start();
 
@@ -172,7 +168,9 @@ public class Hostup {
             if (InetAddress.getByName(target).isReachable(reachable))
                 out.state = true;
 
-        } catch (IOException ignored) {
+        } catch (UnknownHostException e) {
+
+        } catch (IOException e) {
 
         }
 
@@ -187,8 +185,7 @@ public class Hostup {
     /*
      * Performs HTTP HEAD request and returns boolean success or failure
      */
-    @NonNull
-    private HostMessage getHttpHeaders(@NonNull Context context) {
+    private HostMessage getHttpHeaders(Context context) {
         /*
          * get URI
 		 */
@@ -242,23 +239,19 @@ public class Hostup {
     @SuppressWarnings("deprecation")
     private void disableConnectionReuse() {
         // Work around pre-Froyo bugs in HTTP connection reuse.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) {
+            System.setProperty("http.keepAlive", "false");
+        }
     }
 
     public void finish() {
-        assert icmpHandler != null;
         icmpHandler.get().getLooper().quit();
-        assert httpHandler != null;
         httpHandler.get().getLooper().quit();
         masterThread = null;
-        assert _nethandler != null;
         _nethandler.get().getLooper().quit();
         icmpHandler = null;
         httpHandler = null;
         _nethandler = null;
-    }
-
-    public interface HostupResponse {
-        void onHostupResponse(HostMessage hostMessage);
     }
 
     private class SetFailover implements Runnable {
@@ -292,13 +285,15 @@ public class Hostup {
         }
     }
 
+    ;
+
     /*
          * http header check thread
          */
     private class GetHeaders implements Runnable {
         int session;
 
-        GetHeaders(int id) {
+        public GetHeaders(int id) {
             session = id;
         }
 
@@ -316,7 +311,7 @@ public class Hostup {
     private class HostCheck implements Runnable {
         String router;
 
-        HostCheck(String r) {
+        public HostCheck(String r) {
             router = r;
         }
 
@@ -354,7 +349,7 @@ public class Hostup {
     private class GetICMP implements Runnable {
         int session;
 
-        GetICMP(int id) {
+        public GetICMP(int id) {
             session = id;
         }
 

@@ -20,14 +20,12 @@ package org.wahtod.wififixer.legacy;
 
 import android.content.Context;
 import android.os.Environment;
-import android.support.annotation.NonNull;
 
 import java.io.File;
 
 public class LegacyFile extends VersionedFile {
-    @NonNull
     @Override
-    public File vgetLogFile(Context context, @NonNull String filename) {
+    public File vgetLogFile(Context context, String filename) {
         File root = Environment.getExternalStorageDirectory();
         File file = new File(root, filename);
         if (!file.exists()) {

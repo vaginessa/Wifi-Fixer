@@ -25,8 +25,6 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
@@ -34,13 +32,8 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-
 import org.wahtod.wififixer.R;
 import org.wahtod.wififixer.utility.NotifUtil;
 import org.wahtod.wififixer.utility.StringUtil;
@@ -49,15 +42,13 @@ import org.wahtod.wififixer.utility.WFScanResult;
 import java.util.List;
 
 public class LocalNetworksFragment extends Fragment implements LoaderManager.LoaderCallbacks {
-    @Nullable
     private ScanListAdapter adapter;
     private ListView lv;
     private Loader mLoader;
-    @NonNull
     private OnItemLongClickListener il = new OnItemLongClickListener() {
 
         @Override
-        public boolean onItemLongClick(AdapterView<?> parent, @NonNull View v, int p,
+        public boolean onItemLongClick(AdapterView<?> parent, View v, int p,
                                        long id) {
             dispatchItemSelectedEvent(AboutFragment.class.getName(),
                     adapter.getItem(p));
@@ -67,7 +58,6 @@ public class LocalNetworksFragment extends Fragment implements LoaderManager.Loa
         }
     };
 
-    @NonNull
     public static LocalNetworksFragment newInstance(int num) {
         LocalNetworksFragment f = new LocalNetworksFragment();
 
@@ -87,7 +77,7 @@ public class LocalNetworksFragment extends Fragment implements LoaderManager.Loa
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.scannetworks, null);
         lv = (ListView) v.findViewById(R.id.scanlist);
@@ -101,7 +91,7 @@ public class LocalNetworksFragment extends Fragment implements LoaderManager.Loa
          * Send network info to Aboutfragment, creating if necessary
          */
     private void dispatchItemSelectedEvent(String classname,
-                                           @Nullable WFScanResult clicked) {
+                                           WFScanResult clicked) {
         if (clicked == null)
             return;
 
@@ -130,7 +120,6 @@ public class LocalNetworksFragment extends Fragment implements LoaderManager.Loa
         transaction.commit();
     }
 
-    @NonNull
     @Override
     public Loader onCreateLoader(int i, Bundle bundle) {
         return new LocalNetworksLoader(this.getActivity());
@@ -159,11 +148,10 @@ public class LocalNetworksFragment extends Fragment implements LoaderManager.Loa
      * custom adapter for Network List ListView
      */
     private class ScanListAdapter extends ArrayAdapter<WFScanResult> {
-        @Nullable
         private List<WFScanResult> scanresultArray;
         private LayoutInflater inflater;
 
-        public ScanListAdapter(@NonNull Context context, int textViewResourceId,
+        public ScanListAdapter(Context context, int textViewResourceId,
                                List<WFScanResult> scan) {
             super(context, textViewResourceId);
             inflater = (LayoutInflater) getContext().getSystemService(
@@ -186,8 +174,7 @@ public class LocalNetworksFragment extends Fragment implements LoaderManager.Loa
             return position;
         }
 
-        @NonNull
-        public View getView(int position, @Nullable View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.scan_list_layout, null);

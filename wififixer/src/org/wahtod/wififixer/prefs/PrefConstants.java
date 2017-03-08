@@ -40,12 +40,13 @@ public class PrefConstants {
      * PrefsList enum
 	 */
 
-    public enum Pref {
+    public static enum Pref {
         WIFILOCK("WiFiLock"), NOTIFICATIONS("Notifications"), DISABLESERVICE(
                 "Disable"), DEBUG("DEBUG"), N1FIX2("N1FIX2"), MANAGESLEEP(
                 "SCREEN"), STATUS_NOTIFICATION("StateNotif"), HASWIDGET(
                 "HASWIDGET"), WAKELOCK("WAKELOCK_DISABLE"), ATT_BLACKLIST("ATTBLIST"), MULTIBSSID("MULTI"), FORCE_HTTP("HTTP");
 
+        private String key;
         private static final Map<String, Pref> lookup = new HashMap<String, Pref>();
 
         static {
@@ -53,10 +54,12 @@ public class PrefConstants {
                 lookup.put(p.key(), p);
         }
 
-        private String key;
-
         Pref(String key) {
             this.key = key;
+        }
+
+        public String key() {
+            return key;
         }
 
         public static Pref get(String pstring) {
@@ -64,15 +67,12 @@ public class PrefConstants {
             return lookup.get(pstring);
         }
 
-        public String key() {
-            return key;
-        }
-
     }
 
-    public enum NetPref {
+    public static enum NetPref {
         DISABLED("ENABLEDSTATE"), NONMANAGED("NONMANAGED"), HASFORCEDBSSID("FORCED");
 
+        private String key;
         private static final Map<String, NetPref> lookup = new HashMap<String, NetPref>();
 
         static {
@@ -80,19 +80,17 @@ public class PrefConstants {
                 lookup.put(p.key(), p);
         }
 
-        private String key;
-
         NetPref(String key) {
             this.key = key;
+        }
+
+        public String key() {
+            return key;
         }
 
         public static NetPref get(String pstring) {
 
             return lookup.get(pstring);
-        }
-
-        public String key() {
-            return key;
         }
 
     }

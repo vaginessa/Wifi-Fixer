@@ -1,6 +1,0 @@
-<application>
-  <component name="IntentionManagerSettings">
-    <ignoreAction name="Java/Declaration/Join Declaration and Assignment" />
-    <ignoreAction name="Java/Annotations/Add Annotation" />
-  </component>
-</application>

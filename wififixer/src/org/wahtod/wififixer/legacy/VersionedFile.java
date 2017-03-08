@@ -20,14 +20,15 @@ package org.wahtod.wififixer.legacy;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.Nullable;
 
 import java.io.File;
 
 public abstract class VersionedFile {
     private static VersionedFile selector;
 
-    @Nullable
+    public abstract File vgetLogFile(Context context,
+                                     String filename);
+
     public static File getFile(Context context, String filename) {
         /*
 		 * Instantiate appropriate VersionedLogFile
@@ -40,8 +41,4 @@ public abstract class VersionedFile {
         }
         return selector.vgetLogFile(context, filename);
     }
-
-    @Nullable
-    public abstract File vgetLogFile(Context context,
-                                     String filename);
 }

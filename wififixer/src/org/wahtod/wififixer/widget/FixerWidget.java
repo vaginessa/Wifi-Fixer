@@ -22,8 +22,6 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-
 import org.wahtod.wififixer.utility.StatusDispatcher;
 
 public class FixerWidget extends AppWidgetProvider {
@@ -42,14 +40,14 @@ public class FixerWidget extends AppWidgetProvider {
     }
 
     @Override
-    public void onReceive(@NonNull Context context, @NonNull Intent intent) {
+    public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
         if (intent.getAction().equals(
                 StatusDispatcher.ACTION_WIDGET_NOTIFICATION))
             doStatusUpdate(context, intent);
     }
 
-    private void doStatusUpdate(@NonNull Context context, Intent intent) {
+    private void doStatusUpdate(Context context, Intent intent) {
         Intent start = UpdateService.updateIntent(context,
                 StatusUpdateService.class, FixerWidget.class.getName());
         start.fillIn(intent, Intent.FILL_IN_DATA);
@@ -57,7 +55,7 @@ public class FixerWidget extends AppWidgetProvider {
     }
 
     @Override
-    public void onUpdate(@NonNull Context context, AppWidgetManager appWidgetManager,
+    public void onUpdate(Context context, AppWidgetManager appWidgetManager,
                          int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
         /*
@@ -66,4 +64,4 @@ public class FixerWidget extends AppWidgetProvider {
         context.startService(UpdateService.updateIntent(context,
                 UpdateService.class, FixerWidget.class.getName()));
     }
-}
+};

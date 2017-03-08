@@ -19,7 +19,6 @@
 package org.wahtod.wififixer.utility;
 
 import android.net.wifi.SupplicantState;
-import android.support.annotation.NonNull;
 
 import java.util.List;
 
@@ -37,7 +36,6 @@ public class SupplicantPattern {
         return list;
     }
 
-    @NonNull
     @Override
     public String toString() {
         StringBuilder out = new StringBuilder();

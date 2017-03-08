@@ -19,7 +19,6 @@
 package org.wahtod.wififixer;
 
 import android.net.wifi.SupplicantState;
-
 import org.wahtod.wififixer.utility.SupplicantPattern;
 
 import java.util.Arrays;

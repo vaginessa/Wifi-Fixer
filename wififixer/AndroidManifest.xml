@@ -54,8 +54,8 @@
         android:xlargeScreens="true"></supports-screens>
 
     <uses-sdk
-        android:maxSdkVersion="23"
-        android:minSdkVersion="9"
+        android:maxSdkVersion="25"
+        android:minSdkVersion="19"
         android:targetSdkVersion="23" />
 
     <uses-feature

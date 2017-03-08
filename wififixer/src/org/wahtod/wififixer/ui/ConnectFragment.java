@@ -22,8 +22,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiConfiguration;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -35,14 +33,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import org.wahtod.wififixer.R;
 import org.wahtod.wififixer.WFMonitor;
-import org.wahtod.wififixer.utility.AsyncWifiManager;
-import org.wahtod.wififixer.utility.BroadcastHelper;
-import org.wahtod.wififixer.utility.NotifUtil;
-import org.wahtod.wififixer.utility.StringUtil;
-import org.wahtod.wififixer.utility.WFScanResult;
+import org.wahtod.wififixer.utility.*;
 
 import java.lang.reflect.Field;
 
@@ -65,8 +58,7 @@ public class ConnectFragment extends Fragment implements OnClickListener {
     /*
      * Reflection magic ahead
      */
-    @NonNull
-    private static WifiConfiguration addHiddenFields(@NonNull WifiConfiguration w) {
+    private static WifiConfiguration addHiddenFields(WifiConfiguration w) {
         try {
             Field f = w.getClass().getField(IP_ASSIGNMENT);
             Field f2 = w.getClass().getField(PROXY_SETTINGS);
@@ -87,16 +79,17 @@ public class ConnectFragment extends Fragment implements OnClickListener {
         return w;
     }
 
-    @NonNull
     public static ConnectFragment newInstance(WFScanResult n) {
         ConnectFragment f = new ConnectFragment();
         f.mNetwork = n;
         return f;
     }
 
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.connect_fragment, null);
+        View v = inflater.inflate(R.layout.connect_fragment, null);
+        return v;
     }
 
     private int addNetwork(String password) {
@@ -110,7 +103,6 @@ public class ConnectFragment extends Fragment implements OnClickListener {
         return n;
     }
 
-    @NonNull
     private WifiConfiguration getKeyAppropriateConfig(String password) {
         WifiConfiguration wf = new WifiConfiguration();
         if (wf.toString().contains(BUGGED)) {
@@ -149,7 +141,7 @@ public class ConnectFragment extends Fragment implements OnClickListener {
 
     @Override
     public void onDestroyView() {
-        View e = getView().findViewById(R.id.password);
+        View e = ((View) getView().findViewById(R.id.password));
         closeInputMethod(e);
         super.onDestroyView();
     }
@@ -192,14 +184,14 @@ public class ConnectFragment extends Fragment implements OnClickListener {
         f.commit();
     }
 
-    private void closeInputMethod(@NonNull View e) {
+    private void closeInputMethod(View e) {
         InputMethodManager imm = (InputMethodManager) getActivity()
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(e.getWindowToken(), 0);
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState == null) {
             /*
@@ -233,13 +225,12 @@ public class ConnectFragment extends Fragment implements OnClickListener {
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mNetwork != null)
             outState.putBundle(NETWORK_KEY, mNetwork.toBundle());
     }
 
-    @Nullable
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
         /*

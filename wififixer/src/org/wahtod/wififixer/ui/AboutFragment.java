@@ -28,8 +28,6 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -40,14 +38,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
-
 import org.wahtod.wififixer.R;
 import org.wahtod.wififixer.prefs.PrefUtil;
-import org.wahtod.wififixer.utility.AsyncWifiManager;
-import org.wahtod.wififixer.utility.BroadcastHelper;
-import org.wahtod.wififixer.utility.LogUtil;
-import org.wahtod.wififixer.utility.StringUtil;
-import org.wahtod.wififixer.utility.WFScanResult;
+import org.wahtod.wififixer.utility.*;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -57,7 +50,6 @@ public class AboutFragment extends Fragment implements OnClickListener {
     public static final String TAG = "KSABFWKRFBWT";
     private static final String NETWORK_KEY = "WFNETWORK";
     protected static WeakReference<AboutFragment> self;
-    @NonNull
     private static Handler handler = new Handler() {
         @Override
         public void handleMessage(Message message) {
@@ -90,9 +82,8 @@ public class AboutFragment extends Fragment implements OnClickListener {
         }
     };
     protected WFScanResult mNetwork;
-    @NonNull
     private BroadcastReceiver scanreceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, @NonNull Intent intent) {
+        public void onReceive(Context context, Intent intent) {
             /*
              * Dispatch intent commands to handler
 			 */
@@ -106,15 +97,15 @@ public class AboutFragment extends Fragment implements OnClickListener {
             handler.sendMessage(message);
         }
     };
-    @Nullable
     private ViewHolder _views;
 
-    @NonNull
     public static AboutFragment newInstance(WFScanResult r) {
         AboutFragment f = new AboutFragment();
         f.mNetwork = r;
         return f;
     }
+
+    ;
 
     private void refreshViews() {
         try {
@@ -133,7 +124,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.about_fragment, null, false);
         Button b = (Button) v.findViewById(R.id.ssid);
@@ -142,7 +133,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         _views = new ViewHolder(view);
     }
@@ -155,29 +146,29 @@ public class AboutFragment extends Fragment implements OnClickListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        self = new WeakReference<>(this);
+        self = new WeakReference<AboutFragment>(this);
         super.onCreate(savedInstanceState);
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        /*
-         * Restore Network
-         */
-        if (savedInstanceState != null)
-            mNetwork = WFScanResult.fromBundle(savedInstanceState.getBundle(NETWORK_KEY));
-        else {
+        if (savedInstanceState == null) {
             /*
              * Do nothing
              */
+        } else {
+            /*
+             * Restore Network
+             */
+            mNetwork = WFScanResult.fromBundle(savedInstanceState.getBundle(NETWORK_KEY));
         }
         IntentFilter scan = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
         BroadcastHelper.registerReceiver(getActivity(), scanreceiver, scan, false);
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mNetwork != null)
             outState.putBundle(NETWORK_KEY, mNetwork.toBundle());
@@ -195,15 +186,16 @@ public class AboutFragment extends Fragment implements OnClickListener {
         refreshViews();
     }
 
-    @Nullable
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
         /*
          * Animate the view
 		 */
-        if (enter && !(transit == 17432576)) return new ExpandViewAnimation(getView()
-                .findViewById(R.id.about_fragment_layout), ExpandViewAnimation.DURATION);
-        else {
+        if (enter && !(transit == 17432576)) {
+            ExpandViewAnimation ev = new ExpandViewAnimation(getView()
+                    .findViewById(R.id.about_fragment_layout), ExpandViewAnimation.DURATION);
+            return ev;
+        } else {
             Animation anim;
             try {
                 anim = AnimationUtils.loadAnimation(getActivity(), transit);
@@ -232,7 +224,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
         private TextView frequency;
         private TextView level;
 
-        ViewHolder(@NonNull View parent) {
+        public ViewHolder(View parent) {
             ssid = (TextView) parent.findViewById(R.id.ssid);
             bssid = (TextView) parent.findViewById(R.id.bssid);
             capabilities = (TextView) parent.findViewById(R.id.capabilities);
@@ -244,7 +236,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
             ssid.setText(s);
         }
 
-        void setBssid(String s) {
+        public void setBssid(String s) {
             bssid.setText(s);
         }
 
@@ -252,7 +244,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
             capabilities.setText(s);
         }
 
-        void setFrequency(int i) {
+        public void setFrequency(int i) {
             frequency.setText(String.valueOf(i));
         }
 

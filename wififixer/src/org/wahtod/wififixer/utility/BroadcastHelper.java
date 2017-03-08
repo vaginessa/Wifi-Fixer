@@ -22,7 +22,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
 import java.util.HashMap;
@@ -41,7 +40,7 @@ public class BroadcastHelper {
 		 */
     }
 
-    public static boolean isRegistered(@NonNull BroadcastReceiver receiver) {
+    public static boolean isRegistered(BroadcastReceiver receiver) {
         return getMap().containsKey(receiver.toString());
     }
 
@@ -51,9 +50,9 @@ public class BroadcastHelper {
         return _clients;
     }
 
-    public static void registerReceiver(@NonNull Context c,
-                                        @NonNull BroadcastReceiver receiver,
-                                        @NonNull IntentFilter f, boolean local) {
+    public static void registerReceiver(Context c,
+                                        BroadcastReceiver receiver,
+                                        IntentFilter f, boolean local) {
         String hashString = receiver.toString();
         if (!isRegistered(receiver)) {
             try {
@@ -68,8 +67,8 @@ public class BroadcastHelper {
         }
     }
 
-    public static void unregisterReceiver(@NonNull Context c,
-                                          @NonNull BroadcastReceiver receiver) {
+    public static void unregisterReceiver(Context c,
+                                          BroadcastReceiver receiver) {
         String hashString = receiver.toString();
         if (isRegistered(receiver)) {
             try {
@@ -84,7 +83,7 @@ public class BroadcastHelper {
         }
     }
 
-    public static void sendBroadcast(@NonNull Context c, @NonNull Intent i,
+    public static void sendBroadcast(Context c, Intent i,
                                      boolean local) {
         if (local)
             LocalBroadcastManager.getInstance(c).sendBroadcast(i);

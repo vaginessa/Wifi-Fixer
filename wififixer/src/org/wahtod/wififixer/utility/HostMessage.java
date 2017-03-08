@@ -18,10 +18,7 @@
 
 package org.wahtod.wififixer.utility;
 
-import android.support.annotation.Nullable;
-
 public class HostMessage {
-    @Nullable
     public String status;
     public boolean state;
     public StopWatch timer;

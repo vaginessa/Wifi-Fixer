@@ -23,8 +23,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-
 import org.wahtod.wififixer.utility.NotifUtil;
 
 /**
@@ -38,7 +36,7 @@ public class JellyBeanSleepPolicy extends SleepPolicyHelper {
     }
 
     @Override
-    public int vGetSleepPolicy(@NonNull Context context) {
+    public int vGetSleepPolicy(Context context) {
         ContentResolver cr = context.getContentResolver();
         int policy;
         try {
@@ -56,7 +54,6 @@ public class JellyBeanSleepPolicy extends SleepPolicyHelper {
         return pending;
     }
 
-    @NonNull
     private String getSleepPolicyString(int policy) {
         String out = "Set Sleep Policy in Advanced to: ";
 

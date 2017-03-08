@@ -21,13 +21,10 @@ package org.wahtod.wififixer.utility;
 import android.content.Context;
 import android.os.Handler;
 import android.os.PowerManager;
-import android.support.annotation.NonNull;
 
 public class WakeLock {
     private PowerManager.WakeLock wakelock;
-    @NonNull
     private Handler mReleaseHandler = new Handler();
-    @NonNull
     private Runnable ReleasePoster = new Runnable() {
 
         @Override
@@ -36,7 +33,7 @@ public class WakeLock {
         }
     };
 
-    public WakeLock(@NonNull Context context) {
+    public WakeLock(Context context) {
         PowerManager pm = (PowerManager) context
                 .getSystemService(Context.POWER_SERVICE);
         /*

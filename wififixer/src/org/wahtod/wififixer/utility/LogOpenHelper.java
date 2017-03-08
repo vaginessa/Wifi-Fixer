@@ -23,7 +23,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.support.annotation.NonNull;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -38,8 +37,23 @@ public class LogOpenHelper extends SQLiteOpenHelper {
     public static final String ID_KEY = "id";
     public static final String TEXT_KEY = "logtext";
     public static final String TIMESTAMP_KEY = "timeStamp";
-    private static volatile LogOpenHelper _instance;
     private volatile LogObservable logObservable;
+
+    private static class LogObservable extends Observable {
+        @Override
+        public void notifyObservers(Object data) {
+            super.notifyObservers(data);
+        }
+
+        public void changed() {
+            setChanged();
+        }
+    }
+
+    ;
+
+    private static volatile LogOpenHelper _instance;
+
     private volatile SQLiteDatabase database;
 
     private LogOpenHelper(Context context) {
@@ -48,7 +62,7 @@ public class LogOpenHelper extends SQLiteOpenHelper {
         logObservable = new LogObservable();
     }
 
-    public static LogOpenHelper newinstance(@NonNull Context context) {
+    public static LogOpenHelper newinstance(Context context) {
         if (_instance == null) {
             _instance = new LogOpenHelper(context.getApplicationContext());
         }
@@ -56,7 +70,7 @@ public class LogOpenHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(@NonNull SQLiteDatabase db) {
+    public void onCreate(SQLiteDatabase db) {
         String query = "CREATE TABLE " + TABLE_NAME + "(" + ID_KEY + " INTEGER PRIMARY KEY," +
                 TEXT_KEY + " TEXT," +
                 TIMESTAMP_KEY + " DATE DEFAULT (datetime('now','localtime')))";
@@ -64,7 +78,7 @@ public class LogOpenHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(@NonNull SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
     }
@@ -74,7 +88,6 @@ public class LogOpenHelper extends SQLiteOpenHelper {
         database.execSQL(query);
     }
 
-    @NonNull
     public synchronized String getEntry(long id) {
         if (id == 0) {
             return "";
@@ -92,7 +105,6 @@ public class LogOpenHelper extends SQLiteOpenHelper {
         return out.toString();
     }
 
-    @NonNull
     public synchronized String getAllEntries() {
         StringBuilder out = new StringBuilder();
         String query = "SELECT * FROM " + TABLE_NAME;
@@ -127,16 +139,5 @@ public class LogOpenHelper extends SQLiteOpenHelper {
 
     public void unregisterLogObserver(Observer observer) {
         logObservable.deleteObserver(observer);
-    }
-
-    private static class LogObservable extends Observable {
-        @Override
-        public void notifyObservers(Object data) {
-            super.notifyObservers(data);
-        }
-
-        public void changed() {
-            setChanged();
-        }
     }
 }
