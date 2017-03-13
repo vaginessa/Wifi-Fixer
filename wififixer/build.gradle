@@ -30,7 +30,6 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: "info.vividcode.android.sdk-manager"
 apply plugin: "com.monits.staticCodeAnalysis"
-//apply plugin: "nebula.ospackage-base"
 repositories {
     mavenCentral()
     jcenter()
